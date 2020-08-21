@@ -13,16 +13,24 @@ private:
 public:
     Matrix(int row, int col);
     Matrix(int row, int col, double* array);
-    Matrix & operator+=(Matrix m);
-    Matrix & operator-=(Matrix m);
-    Matrix & operator*=(Matrix m);
-    Matrix & operator/=(Matrix m);
-    Matrix friend operator+(Matrix m1, Matrix m2);
-    Matrix friend operator-(Matrix m1, Matrix m2);
-    Matrix friend operator*(Matrix m1, Matrix m2);
-    Matrix friend operator/(Matrix m1, Matrix m2);
-    double & at(int row, int col);
-    int size();
+    Matrix & operator+=(const Matrix & m);
+    Matrix & operator-=(const Matrix & m);
+    Matrix & operator*=(const Matrix & m);
+    Matrix & operator/=(const Matrix & m);
+    Matrix friend operator+(const Matrix m1, const Matrix m2);
+    Matrix friend operator-(const Matrix m1, const Matrix m2);
+    Matrix friend operator*(const Matrix m1, const Matrix m2);
+    Matrix friend operator/(const Matrix m1, const Matrix m2);
+    double det() const;
+    Matrix inverse() const;
+    inline double & at(int row, int col);
+    inline double read(int row, int col) const;
+    int size() const;
+    void swapRow(int i, int j);
+    void swapCol(int i, int j);
+    Matrix adjoint() const;
+    Matrix cofactor(int i, int j) const;
+    Matrix function(double (func)(double)) const;
 };
 
 #endif ALGORIMATRIX_MATRIX_H
