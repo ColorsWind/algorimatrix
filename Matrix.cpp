@@ -1,6 +1,5 @@
 #include "Matrix.h"
 
-
 Matrix::Matrix(int row, int col) : m_row(row), m_col(col), m_array(new double[row * col]) {}
 
 Matrix::Matrix(int row, int col, double *array) : m_row(row), m_col(col), m_array(array) {}
@@ -21,15 +20,17 @@ Matrix &Matrix::operator*=(const Matrix & m) {
     m_col = m.m_col;
     for (int i = 0; i < m_row; i++)
         for (int j = 0; j < m_col; j++) {
-            int v = 0;
+            double v = 0;
             for (int k = 0; k < m.m_row; k++)
                 v += at(i, k) * m.read(k, j);
+            at(i, j) = v;
         }
     return *this;
 }
 
 Matrix &Matrix::operator/=(const Matrix & m) {
     *this *= m.inverse();
+    return *this;
 }
 
 void Matrix::swapRow(int i, int j) {
@@ -125,13 +126,14 @@ Matrix Matrix::function(double (func)(double)) const{
     return  matrix;
 }
 
-Matrix Matrix::adjoint() const{
+Matrix Matrix::adjoint() const {
     Matrix matrix = *this;
     for (int i = 0; i < m_row; i++) {
         for (int j = 0; j < m_col; j++) {
             matrix.at(i, j) = cofactor(i, j).det();
         }
     }
+    return matrix;
 }
 
 Matrix operator+(const Matrix m1, const Matrix m2) {
