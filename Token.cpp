@@ -29,29 +29,31 @@ Token::Token(TokenType type, void *p): m_type(type), m_value(p) {}
 
 Token::~Token() {
     if (m_value != NULL) {
-        delete  m_value;
+        switch(m_type) {
+            case OPERATOR:
+            case DELIMITER:
+                delete (char*)m_value;
+                break;
+            case NUMBER:
+                delete (double *)m_value;
+                break;
+            case VARIABLE:
+            case FUNCTION:
+                delete (string*)m_value;
+                break;
+        }
         m_value = NULL;
     }
 }
 
-Token::Token(const Token &token): m_type(token.m_type) {
-    switch(token.m_type) {
-        case OPERATOR:
-        case DELIMITER:
-            this -> m_value = new char(token.asChar());
-            break;
-        case NUMBER:
-            this -> m_value = new double(token.asNumber());
-            break;
-        case VARIABLE:
-        case FUNCTION:
-            this -> m_value = new string(token.asString());
-            break;
-        case END:
-        default:
-            this -> m_value = NULL;
-    }
+Token &Token::operator=(Token &token) {
+    this ->m_type = token.m_type;
+    this ->m_value = token.copyValue();
+    return *this;
 }
+
+
+Token::Token(const Token & token): m_type(token.m_type), m_value(token.copyValue()) {}
 
 string Token::asString() const {
     return *(string*)m_value;
@@ -82,3 +84,20 @@ bool Token::isEquls(char c) const {
 TokenType Token::getType() const {
     return m_type;
 }
+
+void *Token::copyValue() const {
+    switch(m_type) {
+        case OPERATOR:
+        case DELIMITER:
+            return new char(asChar());
+        case NUMBER:
+            return new double(asNumber());
+        case VARIABLE:
+        case FUNCTION:
+            return new string(asString());
+        case END:
+        default:
+            return NULL;
+    }
+}
+

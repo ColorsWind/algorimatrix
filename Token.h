@@ -9,7 +9,7 @@ using std::string;
 using std::ostream;
 const static char OPERATORS[] = {'+', '-', '*', '/'};
 const static char DELIMITERS[] = {'(', ')', '[', ']', ','};
-const static string BLACKS = {' '};
+const static string BLACKS = {' ', '\r', '\n', '\f'};
 
 
 enum TokenType {VARIABLE, NUMBER, FUNCTION, OPERATOR, DELIMITER, END};
@@ -18,7 +18,8 @@ protected:
     TokenType m_type;
     void* m_value;
 public:
-    Token(TokenType type);
+    explicit Token(TokenType type);
+    Token & operator=(Token & token);
     Token(TokenType type, double d);
     Token(TokenType type, char c);
     Token(TokenType type, string str);
@@ -31,6 +32,8 @@ public:
     string toString() const;
     bool isEquls(char c) const;
     TokenType getType() const;
+    void* copyValue() const;
+
 };
 
 #endif //ALGORIMATRIX_TOKEN_H
