@@ -64,3 +64,8 @@ char Token::asChar() const {
 double Token::asNumber() const {
     return *(double*)m_value;
 }
+
+Token::Token(TokenType type, double d) : m_type(type), m_value(new double(d)){}
+Token::Token(TokenType type, char c) : m_type(type), m_value(new char(c)){}
+Token::Token(TokenType type, string str) : m_type(type), m_value(new string(str)){}
+Token::Token(TokenType type) : m_type(type), m_value(NULL) {}

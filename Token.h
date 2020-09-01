@@ -18,6 +18,10 @@ protected:
     const TokenType m_type;
     void* m_value;
 public:
+    Token(TokenType type);
+    Token(TokenType type, double d);
+    Token(TokenType type, char c);
+    Token(TokenType type, string str);
     Token(TokenType type, void* p);
     ~Token();
     Token(const Token & token);
@@ -25,6 +29,7 @@ public:
     char asChar() const;
     double asNumber() const;
     string toString() const;
+
 };
 
 #endif //ALGORIMATRIX_TOKEN_H

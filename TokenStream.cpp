@@ -3,9 +3,6 @@
 //
 
 #include "TokenStream.h"
-#include "CharToken.h"
-#include "NumberToken.h"
-#include "StringToken.h"
 
 static bool isOperator(char c);
 static bool isDelimiter(char c);
@@ -17,21 +14,21 @@ inline bool isWord(char c);
 
 TokenStream::TokenStream(string command): m_input(command), m_offset(0), m_end(false) {}
 
-Token* TokenStream::next() {
+Token TokenStream::next() {
     char c = m_input[m_offset];
     if (c == '\0') {
         m_end = true;
-        return new Token(END);
+        return Token(END);
     } else if (isBlank(c)) {
         // skip
         m_offset++;
         return next();
     } else if (isDelimiter(c)) {
         m_offset++;
-        return new CharToken(DELIMITER, c);
+        return Token(DELIMITER, c);
     } else if (isOperator(c)) {
         m_offset++;
-        return new CharToken(OPERATOR, c);
+        return Token(OPERATOR, c);
     } else if (isWord(c)) {
         return readWord();
     } else if (isDigit(c)) {
@@ -53,7 +50,7 @@ long long TokenStream::readDigit() {
     return result;
 }
 
-Token* TokenStream::readNumber() {
+Token TokenStream::readNumber() {
     double value;
     long long integral = readDigit();
     if (m_input[m_offset] == '.') {
@@ -69,17 +66,17 @@ Token* TokenStream::readNumber() {
         int exponent = readDigit();
         value *= pow(10, exponent);
     }
-    return new NumberToken(NUMBER, value);
+    return Token(NUMBER, value);
 }
 
-Token* TokenStream::readWord() {
+Token TokenStream::readWord() {
     string value;
     char c;
     while(c = m_input[m_offset], isDigit(c) || isWord(c)) {
         value += c;
         m_offset++;
     }
-    return new StringToken(VARIABLE, value);
+    return Token(VARIABLE, value);
 }
 
 static bool isOperator(char c) {

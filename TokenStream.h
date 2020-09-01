@@ -14,12 +14,12 @@ private:
     const string m_input;
     int m_offset;
     bool m_end;
-    Token * readNumber();
-    Token * readWord();
+    Token readNumber();
+    Token readWord();
 public:
     explicit TokenStream(string m_command);
     bool hasNext();
-    Token * next();
+    Token next();
 
     long long int readDigit();
 };
