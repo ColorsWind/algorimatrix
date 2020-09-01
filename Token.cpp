@@ -46,7 +46,7 @@ Token::~Token() {
     }
 }
 
-Token &Token::operator=(Token &token) {
+Token &Token::operator=(const Token &token) {
     this ->m_type = token.m_type;
     this ->m_value = token.copyValue();
     return *this;

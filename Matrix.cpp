@@ -1,4 +1,6 @@
 #include "Matrix.h"
+#include <sstream>
+using std::to_string;
 
 Matrix::Matrix(int row, int col) : m_row(row), m_col(col), m_array(new double[row * col]) {}
 
@@ -158,6 +160,50 @@ Matrix operator/(const Matrix m1, const Matrix m2) {
     Matrix matrix = m1;
     matrix /= m2;
     return matrix;
+}
+
+Matrix::Matrix(double number) : Matrix(1, 1, new double(number)) {}
+
+Matrix operator+(const Matrix m) {
+    return Matrix(m);
+}
+
+Matrix operator-(const Matrix m) {
+    Matrix matrix(m);
+    for(int k=0;k<matrix.size();k++) {
+        matrix[k] = -matrix[k];
+    }
+    return matrix;
+}
+
+double &Matrix::operator[](const int k) {
+    return m_array[k];
+}
+
+string Matrix::toString() const {
+    if (this->size() == 0) {
+        return "!Empty Matrix";
+    } else if (this->size() == 1) {
+        return to_string(m_array[0]);
+    } else {
+        string str;
+        for(int i=0;i<m_row;i++) {
+            for(int j=0;j<m_col;j++) {
+                str.append(" ");
+                str.append(to_string(read(i, j)));
+            }
+            str.append("\n");
+        }
+        return str;
+    }
+}
+
+int Matrix::getRow() const {
+    return m_row;
+}
+
+int Matrix::getCol() const {
+    return m_col;
 }
 
 

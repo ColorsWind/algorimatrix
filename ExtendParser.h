@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "TokenStream.h"
+#include "Matrix.h"
 #include "Token.h"
 using std::string;
 
@@ -23,13 +24,14 @@ public:
     ExtendParser(TokenStream & tokenStream);
     void advance();
     Token & getToken();
-    double processE();
-    double processT();
-    double processU();
-    double processF();
-    double processL();
+    Matrix processE();
+    Matrix processT();
+    Matrix processU();
+    Matrix processF();
+    Matrix processL();
 
 
+    Matrix processM();
 };
 
 

@@ -8,7 +8,7 @@
 using std::string;
 using std::ostream;
 const static char OPERATORS[] = {'+', '-', '*', '/'};
-const static char DELIMITERS[] = {'(', ')', '[', ']', ','};
+const static char DELIMITERS[] = {'(', ')', '[', ']', ',', ';'};
 const static string BLACKS = {' ', '\r', '\n', '\f'};
 
 
@@ -19,7 +19,7 @@ protected:
     void* m_value;
 public:
     explicit Token(TokenType type);
-    Token & operator=(Token & token);
+    Token & operator=(const Token & token);
     Token(TokenType type, double d);
     Token(TokenType type, char c);
     Token(TokenType type, string str);

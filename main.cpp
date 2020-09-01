@@ -12,10 +12,10 @@ int main() {
     TokenStream tokenStream(command);
     ExtendParser parser(tokenStream);
     parser.advance();
-    double d = parser.processE();
+    Matrix matrix = parser.processE();
     if (parser.getToken().getType() != END) {
         cerr << "ERROR not end";
     }
-    cout << "ANS = " << d << endl;
+    cout << "ANS = " << "\n" << matrix.toString() << endl;
 }
 

@@ -4,9 +4,12 @@
 
 #include "ExtendParser.h"
 #include <iostream>
+#include <vector>
 
 using std::cerr;
 using std::endl;
+using std::vector;
+using std::copy;
 void ExtendParser::advance() {
     m_token = m_stream.next();
 }
@@ -15,8 +18,8 @@ Token &ExtendParser::getToken(){
     return m_token;
 }
 
-double ExtendParser::processE() {
-    double result = processT();
+ Matrix ExtendParser::processE() {
+    Matrix result = processT();
     while(m_token.getType() == OPERATOR) {
         char c = m_token.asChar();
         if (c == '+') {
@@ -32,8 +35,8 @@ double ExtendParser::processE() {
     return result;
 }
 
-double ExtendParser::processT() {
-    double result = processU();
+Matrix ExtendParser::processT() {
+    Matrix result = processU();
     while(m_token.getType() == OPERATOR) {
         char c = m_token.asChar();
         if (c == '*') {
@@ -49,7 +52,7 @@ double ExtendParser::processT() {
     return result;
 }
 
-double ExtendParser::processU() {
+Matrix ExtendParser::processU() {
     if (m_token.getType() == OPERATOR) {
         char c = m_token.asChar();
         if (c == '-') {
@@ -65,26 +68,64 @@ double ExtendParser::processU() {
     return processF();
 }
 
-double ExtendParser::processF() {
-    double result;
+Matrix ExtendParser::processF() {
+    Matrix result(0, 0);
     if (m_token.isEquls('(')) {
         this->advance();
         result = processE();
         if (m_token.isEquls(')')) this->advance();
-        else cerr << "ERROR processF() expect ')'" << endl;
+        else cerr << "ERROR processF() : Expect ')'" << endl;
+    } else if (m_token.isEquls('[')) {
+        this->advance();
+        result = processM();
+        if (m_token.isEquls(']')) this->advance();
+        else cerr << "ERROR processF() : Expect ']'" << endl;
     } else if (m_token.getType() == NUMBER) {
         result = m_token.asNumber();
         this-> advance();
     } else {
-        cerr <<  "ERROR processF()" << endl;
+        cerr <<  "ERROR processF() : Unexpected Token " << m_token.toString() << endl;
         throw;
     }
     return result;
 }
 
-double ExtendParser::processL() {
-    return 0;
+Matrix ExtendParser::processL() {
+    vector<double> arr;
+    arr.push_back(processE()[0]);
+    while(m_token.isEquls(',')) {
+        this->advance();
+        arr.push_back(processE()[0]);
+    }
+    double* matrix = new double(arr.size());
+    copy(arr.begin(), arr.end(), matrix);
+    return Matrix(1, arr.size(), matrix);
 }
 
+Matrix ExtendParser::processM()
+{
+    vector<Matrix> arr;
+    arr.push_back(processL());
+    while(m_token.isEquls(';')) {
+        this->advance();
+        arr.push_back(processL());
+    }
+    int row = arr.size();
+    int col = arr.front().getCol();
+    Matrix matrix(arr.size(), arr.front().getCol());
+    for(int i=0;i<row;i++) {
+        Matrix &line = arr[i];
+        if (line.getCol() != col) {
+            cerr << "ERROR processM() : Inconsistent number of elements in row vector.";
+            throw;
+        }
+        for(int j=0;j<col;j++)
+            matrix.at(i, j) = line.read(0, j);
+    }
+    return matrix;
+}
+
+
 ExtendParser::ExtendParser(TokenStream &tokenStream) : m_stream(tokenStream), m_token(Token(END)) {}
+
 
