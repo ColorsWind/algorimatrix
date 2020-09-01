@@ -9,16 +9,22 @@ using std::string;
 using std::ostream;
 const static char OPERATORS[] = {'+', '-', '*', '/'};
 const static char DELIMITERS[] = {'(', ')', '[', ']', ','};
-const static string BLACKS = {' ', '\r', '\n', '\f'};
+const static string BLACKS = {' '};
 
 
 enum TokenType {VARIABLE, NUMBER, FUNCTION, OPERATOR, DELIMITER, END};
 class Token {
 protected:
-    TokenType m_type;
+    const TokenType m_type;
+    void* m_value;
 public:
-    Token(TokenType type);
-    virtual string toString();
+    Token(TokenType type, void* p);
+    ~Token();
+    Token(const Token & token);
+    string asString() const;
+    char asChar() const;
+    double asNumber() const;
+    string toString() const;
 };
 
 #endif //ALGORIMATRIX_TOKEN_H
