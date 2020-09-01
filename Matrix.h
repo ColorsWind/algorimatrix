@@ -14,9 +14,12 @@ private:
     int m_col;
     double* m_array;
 public:
+    ~Matrix();
+    Matrix(const Matrix &matrix);
     Matrix(double number);
     Matrix(int row, int col);
     Matrix(int row, int col, double* array);
+    Matrix & operator=(const Matrix & m);
     Matrix & operator+=(const Matrix & m);
     Matrix & operator-=(const Matrix & m);
     Matrix & operator*=(const Matrix & m);

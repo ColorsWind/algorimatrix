@@ -1,10 +1,23 @@
 #include "Matrix.h"
 #include <sstream>
 using std::to_string;
+using std::copy;
 
-Matrix::Matrix(int row, int col) : m_row(row), m_col(col), m_array(new double[row * col]) {}
+Matrix::~Matrix() {
+    delete [] m_array;
+    m_array = NULL;
+}
+Matrix::Matrix(const Matrix &matrix) : Matrix(matrix.m_row, matrix.m_col) {
+    copy(matrix.m_array, matrix.m_array + size(), m_array);
+}
 
-Matrix::Matrix(int row, int col, double *array) : m_row(row), m_col(col), m_array(array) {}
+Matrix::Matrix(int row, int col) : m_row(row), m_col(col) {
+    m_array = new double[size()];
+}
+
+Matrix::Matrix(int row, int col, double *array) : Matrix(row, col) {
+    copy(array, array + size(), m_array);
+}
 
 Matrix &Matrix::operator+=(const Matrix & m) {
     for (int i = 0; i < size(); i++)
@@ -19,14 +32,7 @@ Matrix &Matrix::operator-=(const Matrix & m) {
 };
 
 Matrix &Matrix::operator*=(const Matrix & m) {
-    m_col = m.m_col;
-    for (int i = 0; i < m_row; i++)
-        for (int j = 0; j < m_col; j++) {
-            double v = 0;
-            for (int k = 0; k < m.m_row; k++)
-                v += at(i, k) * m.read(k, j);
-            at(i, j) = v;
-        }
+    *this = *this * m;
     return *this;
 }
 
@@ -138,6 +144,18 @@ Matrix Matrix::adjoint() const {
     return matrix;
 }
 
+Matrix &Matrix::operator=(const Matrix &m) {
+    if (size() != m.size()) {
+        delete [] m_array;
+        m_array = new double[m.size()];
+    }
+    m_col = m.m_col;
+    m_row = m.m_row;
+    copy(m.m_array, m.m_array + size(), m_array);
+    return *this;
+}
+
+
 Matrix operator+(const Matrix m1, const Matrix m2) {
     Matrix matrix = m1;
     matrix += m2;
@@ -151,8 +169,15 @@ Matrix operator-(const Matrix m1, const Matrix m2) {
 }
 
 Matrix operator*(const Matrix m1, const Matrix m2) {
-    Matrix matrix = m1;
-    matrix *= m2;
+    Matrix matrix(m1.m_row, m2.m_col);
+    for(int i=0;i<matrix.m_row;i++) {
+        for(int j=0;j<matrix.m_col;j++) {
+            double v = 0;
+            for(int k=0;k<m1.m_col;k++)
+                v += m1.read(i, k) * m2.read(k, j);
+            matrix.at(i, j) = v;
+        }
+    }
     return matrix;
 }
 
@@ -162,7 +187,7 @@ Matrix operator/(const Matrix m1, const Matrix m2) {
     return matrix;
 }
 
-Matrix::Matrix(double number) : Matrix(1, 1, new double(number)) {}
+Matrix::Matrix(double number) : Matrix(1, 1, &number) {}
 
 Matrix operator+(const Matrix m) {
     return Matrix(m);
@@ -205,6 +230,11 @@ int Matrix::getRow() const {
 int Matrix::getCol() const {
     return m_col;
 }
+
+
+
+
+
 
 
 
