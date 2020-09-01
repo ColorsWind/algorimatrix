@@ -9,11 +9,11 @@ using std::to_string;
 string Token::toString() const {
     switch(m_type) {
         case OPERATOR:
-            return string("Operator{") + asChar() + "}";
+            return string("Operator{'") + asChar() + "'}";
         case DELIMITER:
-            return string("Delimiter{") + asChar() + "}";
+            return string("Delimiter{'") + asChar() + "'}";
         case NUMBER:
-            return string("Number{") + to_string(asNumber()); + "}";
+            return string("Number{") + to_string(asNumber()) + "}";
         case VARIABLE:
             return string("Variable{\"") + asString() + "\"}";
         case FUNCTION:
@@ -69,3 +69,16 @@ Token::Token(TokenType type, double d) : m_type(type), m_value(new double(d)){}
 Token::Token(TokenType type, char c) : m_type(type), m_value(new char(c)){}
 Token::Token(TokenType type, string str) : m_type(type), m_value(new string(str)){}
 Token::Token(TokenType type) : m_type(type), m_value(NULL) {}
+
+bool Token::isEquls(char c) const {
+    switch (m_type) {
+        case OPERATOR:
+        case DELIMITER:
+            if (asChar() == c) return true;
+    }
+    return false;
+}
+
+TokenType Token::getType() const {
+    return m_type;
+}

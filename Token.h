@@ -15,7 +15,7 @@ const static string BLACKS = {' '};
 enum TokenType {VARIABLE, NUMBER, FUNCTION, OPERATOR, DELIMITER, END};
 class Token {
 protected:
-    const TokenType m_type;
+    TokenType m_type;
     void* m_value;
 public:
     Token(TokenType type);
@@ -29,7 +29,8 @@ public:
     char asChar() const;
     double asNumber() const;
     string toString() const;
-
+    bool isEquls(char c) const;
+    TokenType getType() const;
 };
 
 #endif //ALGORIMATRIX_TOKEN_H
