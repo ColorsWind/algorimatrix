@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <vector>
-#include <functional>
 
 using std::string;
 using std::vector;
@@ -51,5 +50,8 @@ public:
     Matrix traverse(double (func)(double)) const;
     Matrix traverse(double (func)(double,double), Matrix &parameter) const;
 };
+
+typedef Matrix (*Func1)(Matrix&);
+typedef Matrix (*Func2)(Matrix&, Matrix&);
 
 #endif ALGORIMATRIX_MATRIX_H

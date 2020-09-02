@@ -3,6 +3,7 @@
 //
 
 #include "TokenStream.h"
+#include "MatrixFunc.h"
 
 static bool isOperator(char c);
 static bool isDelimiter(char c);
@@ -25,10 +26,10 @@ Token TokenStream::next() {
         return next();
     } else if (isDelimiter(c)) {
         m_offset++;
-        return Token(DELIMITER, c);
+        return Token(DELIMITER, c,{c, '\0'});
     } else if (isOperator(c)) {
         m_offset++;
-        return Token(OPERATOR, c);
+        return Token(OPERATOR, c, {c, '\0'});
     } else if (isWord(c)) {
         return readWord();
     } else if (isDigit(c)) {
@@ -51,6 +52,7 @@ long long TokenStream::readDigit() {
 }
 
 Token TokenStream::readNumber() {
+    int begin = m_offset;
     double value;
     long long integral = readDigit();
     if (m_input[m_offset] == '.') {
@@ -66,7 +68,7 @@ Token TokenStream::readNumber() {
         int exponent = readDigit();
         value *= pow(10, exponent);
     }
-    return Token(NUMBER, value);
+    return Token(NUMBER, value, m_input.substr(begin, m_offset));
 }
 
 Token TokenStream::readWord() {
@@ -76,7 +78,15 @@ Token TokenStream::readWord() {
         value += c;
         m_offset++;
     }
-    return Token(VARIABLE, value);
+    auto it1 = map_func1.find(value);
+    if (it1 != map_func1.end()) {
+        return Token(FUNCTION_1, it1 -> second, value);
+    }
+    auto it2 = map_func2.find(value);
+    if (it2 != map_func2.end()) {
+        return Token(FUNCTION_2, it2 -> second, value);
+    }
+    return Token(VARIABLE, value, value);
 }
 
 static bool isOperator(char c) {

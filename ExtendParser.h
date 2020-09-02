@@ -14,7 +14,7 @@ using std::string;
 // E -> T{(+|-)T}
 // T -> U{(*|/)U}
 // U -> -F | +F | F
-// F -> (E) | FUNCTION(L) | VARIABLE | [L] | NUMBER
+// F -> (E) | FUNCTION_1(L) | VARIABLE | [L] | NUMBER
 // L  -> E{,E}
 class ExtendParser {
 private:
