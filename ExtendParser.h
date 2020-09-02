@@ -28,7 +28,7 @@ public:
     Matrix processT();
     Matrix processU();
     Matrix processF();
-    Matrix processL();
+    vector<struct Matrix> processL();
 
 
     Matrix processM();

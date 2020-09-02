@@ -28,6 +28,9 @@ string Token::toString() const {
 }
 
 Token::Token(TokenType type, void *p, const string &origin): m_type(type), m_value(p), m_origin(origin) {}
+Token::Token(TokenType type, Func1 p, const string &origin): m_type(type), m_origin(origin) {
+    m_value = p;
+}
 
 Token::~Token() {
     if (m_value != NULL) {
@@ -104,9 +107,7 @@ void *Token::copyValue() const {
         case VARIABLE:
             return new string(asString());
         case FUNCTION_1:
-            return new Func1(asFunction1());
-        case FUNCTION_2:
-            return new Func2(asFunction2());
+            return m_value;
         case END:
         default:
             return NULL;

@@ -145,16 +145,16 @@ Matrix Matrix::inverse() const{
 Matrix Matrix::traverse(double (func)(double)) const{
     Matrix matrix(m_row, m_col);
     for (int k = 0; k < matrix.size(); k++) {
-        matrix[k] = func(matrix[k]);
+        matrix[k] = func(m_array[k]);
     }
     return  matrix;
 }
 
 
-Matrix Matrix::traverse(double (*func)(double, double), Matrix &parameter) const {
+Matrix Matrix::traverse(double (*func)(double, double), const Matrix &parameter) const {
     Matrix matrix(m_row, m_col);
     for(int k=0;k<matrix.size();k++) {
-        matrix[k] = func(m_array[k], parameter[k]);
+        matrix[k] = func(m_array[k], parameter.m_array[k]);
     }
     return matrix;
 }

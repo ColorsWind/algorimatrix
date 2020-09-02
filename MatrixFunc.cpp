@@ -3,56 +3,56 @@
 //
 #include "MatrixFunc.h"
 
-Matrix sin(Matrix &matrix) {
+Matrix sin(const Matrix &matrix) {
     return matrix.traverse(sin);
 }
 
-Matrix cos(Matrix &matrix) {
+Matrix cos(const Matrix &matrix) {
     return matrix.traverse(cos);
 }
 
-Matrix tan(Matrix &matrix) {
+Matrix tan(const Matrix &matrix) {
     return matrix.traverse(tan);
 }
 
 
-Matrix cot(Matrix &matrix) {
+Matrix cot(const Matrix &matrix) {
     return matrix.traverse([] (double d)-> double {return tan(PI/2 - d);});
 }
 
-Matrix csc(Matrix &matrix) {
+Matrix csc(const Matrix &matrix) {
     return matrix.traverse([] (double d)-> double {return 1/sin(d);});
 }
 
-Matrix sec(Matrix &matrix) {
+Matrix sec(const Matrix &matrix) {
     return matrix.traverse([] (double d)-> double {return 1/cos(d);});
 }
 
-Matrix exp(Matrix &matrix) {
+Matrix exp(const Matrix &matrix) {
     return matrix.traverse(exp);
 }
 
-Matrix pow(Matrix &base, Matrix &exponent) {
+Matrix pow(const Matrix &base, const Matrix &exponent) {
     return base.traverse(pow, exponent);
 }
 
-Matrix ln(Matrix &matrix) {
+Matrix ln(const Matrix &matrix) {
     return matrix.traverse(log);
 }
 
-Matrix log(Matrix &base, Matrix &natural) {
+Matrix log(const Matrix &base, const Matrix &natural) {
     return  base.traverse([] (double b, double n)-> double {return log(n) / log(b);}, natural);
 }
 
-Matrix arcsin(Matrix &matrix) {
+Matrix arcsin(const Matrix &matrix) {
     return  matrix.traverse(asin);
 }
 
-Matrix arccos(Matrix &matrix) {
+Matrix arccos(const Matrix &matrix) {
     return matrix.traverse(acos);
 }
 
-Matrix arctan(Matrix &matrix) {
+Matrix arctan(const Matrix &matrix) {
     return matrix.traverse(atan);
 }
 

@@ -17,6 +17,7 @@ const static string BLACKS = {' ', '\r', '\n', '\f'};
 enum TokenType {VARIABLE, NUMBER, FUNCTION_1, FUNCTION_2, OPERATOR, DELIMITER, END};
 class Token {
 protected:
+
     TokenType m_type;
     void* m_value;
     string m_origin;
@@ -39,6 +40,8 @@ public:
     Func1 asFunction1() const;
     Func2 asFunction2() const;
     const string &getRawText() const;
+
+    Token(TokenType type, Func1 p, const string &origin);
 };
 
 #endif //ALGORIMATRIX_TOKEN_H

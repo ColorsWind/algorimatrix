@@ -48,10 +48,10 @@ public:
     int getRow() const;
     int getCol() const;
     Matrix traverse(double (func)(double)) const;
-    Matrix traverse(double (func)(double,double), Matrix &parameter) const;
+    Matrix traverse(double (func)(double,double), const Matrix &parameter) const;
 };
 
-typedef Matrix (*Func1)(Matrix&);
-typedef Matrix (*Func2)(Matrix&, Matrix&);
+typedef Matrix (*Func1)(const Matrix&);
+typedef Matrix (*Func2)(const Matrix&, const Matrix&);
 
 #endif ALGORIMATRIX_MATRIX_H
