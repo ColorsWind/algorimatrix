@@ -97,9 +97,7 @@ Matrix ExtendParser::processL() {
         this->advance();
         arr.push_back(processE()[0]);
     }
-    double* matrix = new double(arr.size());
-    copy(arr.begin(), arr.end(), matrix);
-    return Matrix(1, arr.size(), matrix);
+    return Matrix(arr);
 }
 
 Matrix ExtendParser::processM()

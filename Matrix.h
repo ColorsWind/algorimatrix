@@ -6,7 +6,9 @@
 #define ALGORIMATRIX_MATRIX_H
 
 #include <iostream>
+#include <vector>
 using std::string;
+using std::vector;
 
 class Matrix {
 private:
@@ -19,6 +21,7 @@ public:
     Matrix(double number);
     Matrix(int row, int col);
     Matrix(int row, int col, double* array);
+    Matrix(vector<double> &array);
     Matrix & operator=(const Matrix & m);
     Matrix & operator+=(const Matrix & m);
     Matrix & operator-=(const Matrix & m);

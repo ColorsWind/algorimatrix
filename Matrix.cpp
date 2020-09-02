@@ -7,16 +7,32 @@ Matrix::~Matrix() {
     delete [] m_array;
     m_array = NULL;
 }
-Matrix::Matrix(const Matrix &matrix) : Matrix(matrix.m_row, matrix.m_col) {
-    copy(matrix.m_array, matrix.m_array + size(), m_array);
-}
 
 Matrix::Matrix(int row, int col) : m_row(row), m_col(col) {
     m_array = new double[size()];
 }
 
+Matrix::Matrix(const Matrix &matrix) : Matrix(matrix.m_row, matrix.m_col) {
+    copy(matrix.m_array, matrix.m_array + size(), m_array);
+}
+
 Matrix::Matrix(int row, int col, double *array) : Matrix(row, col) {
     copy(array, array + size(), m_array);
+}
+
+Matrix::Matrix(vector<double> &array) : Matrix(1, array.size()) {
+    copy(array.begin(), array.end(), m_array);
+}
+
+Matrix &Matrix::operator=(const Matrix &m) {
+    if (size() != m.size()) {
+        delete [] m_array;
+        m_array = new double[m.size()];
+    }
+    m_col = m.m_col;
+    m_row = m.m_row;
+    copy(m.m_array, m.m_array + size(), m_array);
+    return *this;
 }
 
 Matrix &Matrix::operator+=(const Matrix & m) {
@@ -144,16 +160,7 @@ Matrix Matrix::adjoint() const {
     return matrix;
 }
 
-Matrix &Matrix::operator=(const Matrix &m) {
-    if (size() != m.size()) {
-        delete [] m_array;
-        m_array = new double[m.size()];
-    }
-    m_col = m.m_col;
-    m_row = m.m_row;
-    copy(m.m_array, m.m_array + size(), m_array);
-    return *this;
-}
+
 
 
 Matrix operator+(const Matrix m1, const Matrix m2) {
@@ -230,6 +237,8 @@ int Matrix::getRow() const {
 int Matrix::getCol() const {
     return m_col;
 }
+
+
 
 
 
