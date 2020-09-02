@@ -10,16 +10,9 @@ int main() {
     cin.getline(a, 100);
     string command(a);
     TokenStream tokenStream(command);
-    ExtendParser parser(tokenStream);
-    parser.advance();
-    Matrix matrix = parser.processE();
-    if (parser.getToken().getType() != END) {
-        cerr << "ERROR not end";
+    while(tokenStream.hasNext()) {
+        cout << tokenStream.next().toString() << endl;
     }
-    cout << "ANS = ";
-    if (matrix.size() > 1) {
-        cout << "\n";
-    }
-    cout << matrix.toString() << endl;
+
 }
 
