@@ -142,13 +142,23 @@ Matrix Matrix::inverse() const{
     return matrix;
 }
 
-Matrix Matrix::function(double (func)(double)) const{
-    Matrix matrix = *this;
+Matrix Matrix::traverse(double (func)(double)) const{
+    Matrix matrix(m_row, m_col);
     for (int k = 0; k < matrix.size(); k++) {
-        matrix.m_array[k] = func(matrix.m_array[k]);
+        matrix[k] = func(matrix[k]);
     }
     return  matrix;
 }
+
+
+Matrix Matrix::traverse(double (*func)(double, double), Matrix &parameter) const {
+    Matrix matrix(m_row, m_col);
+    for(int k=0;k<matrix.size();k++) {
+        matrix[k] = func(m_array[k], parameter[k]);
+    }
+    return matrix;
+}
+
 
 Matrix Matrix::adjoint() const {
     Matrix matrix = *this;

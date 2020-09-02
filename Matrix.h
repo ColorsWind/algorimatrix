@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include <vector>
+#include <functional>
+
 using std::string;
 using std::vector;
 
@@ -43,12 +45,11 @@ public:
     void swapCol(int i, int j);
     Matrix adjoint() const;
     Matrix cofactor(int i, int j) const;
-    Matrix function(double (func)(double)) const;
     string toString() const;
-
     int getRow() const;
-
     int getCol() const;
+    Matrix traverse(double (func)(double)) const;
+    Matrix traverse(double (func)(double,double), Matrix &parameter) const;
 };
 
 #endif ALGORIMATRIX_MATRIX_H
