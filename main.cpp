@@ -16,6 +16,10 @@ int main() {
     if (parser.getToken().getType() != END) {
         cerr << "ERROR not end";
     }
-    cout << "ANS = " << "\n" << matrix.toString() << endl;
+    cout << "ANS = ";
+    if (matrix.size() > 1) {
+        cout << "\n";
+    }
+    cout << matrix.toString() << endl;
 }
 
