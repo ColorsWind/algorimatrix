@@ -12,22 +12,20 @@ using std::map;
 const static double PI = acos(-1.0);
 const static double E = exp(1.0);
 
-Matrix sin(const Matrix&);
-Matrix cos(const Matrix&);
-Matrix tan(const Matrix&);
-Matrix cot(const Matrix&);
-Matrix csc(const Matrix&);
-Matrix sec(const Matrix&);
-Matrix arcsin(const Matrix&);
-Matrix arccos(const Matrix&);
-Matrix arctan(const Matrix&);
-Matrix ln(const Matrix&);
-Matrix log(const Matrix&, const Matrix&);
-Matrix exp(const Matrix&);
-Matrix pow(const Matrix&, const Matrix&);
+Matrix sin(const vector<Matrix>&);
+Matrix cos(const vector<Matrix>&);
+Matrix tan(const vector<Matrix>&);
+Matrix cot(const vector<Matrix>&);
+Matrix csc(const vector<Matrix>&);
+Matrix sec(const vector<Matrix>&);
+Matrix arcsin(const vector<Matrix>&);
+Matrix arccos(const vector<Matrix>&);
+Matrix arctan(const vector<Matrix>&);
+Matrix ln(const vector<Matrix>&);
+Matrix log(const vector<Matrix>&);
+Matrix exp(const vector<Matrix>&);
+Matrix pow(const vector<Matrix>&);
 
-extern map<string, Func1> map_func1;
-extern map<string, Func2> map_func2;
-
+extern map<string, Func> map_func;
 
 #endif //ALGORIMATRIX_MATRIXFUNC_H

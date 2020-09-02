@@ -3,64 +3,72 @@
 //
 #include "MatrixFunc.h"
 
-Matrix sin(const Matrix &matrix) {
-    return matrix.traverse(sin);
+Matrix sin(const vector<Matrix> &matrix) {
+    return matrix[0].traverse(sin);
 }
 
-Matrix cos(const Matrix &matrix) {
-    return matrix.traverse(cos);
+Matrix cos(const vector<Matrix> &matrix) {
+    return matrix[0].traverse(cos);
 }
 
-Matrix tan(const Matrix &matrix) {
-    return matrix.traverse(tan);
+Matrix tan(const vector<Matrix> &matrix) {
+    return matrix[0].traverse(tan);
 }
 
 
-Matrix cot(const Matrix &matrix) {
-    return matrix.traverse([] (double d)-> double {return tan(PI/2 - d);});
+Matrix cot(const vector<Matrix> &matrix) {
+    return matrix[0].traverse([] (double d)-> double {return tan(PI/2 - d);});
 }
 
-Matrix csc(const Matrix &matrix) {
-    return matrix.traverse([] (double d)-> double {return 1/sin(d);});
+Matrix csc(const vector<Matrix> &matrix) {
+    return matrix[0].traverse([] (double d)-> double {return 1/sin(d);});
 }
 
-Matrix sec(const Matrix &matrix) {
-    return matrix.traverse([] (double d)-> double {return 1/cos(d);});
+Matrix sec(const vector<Matrix> &matrix) {
+    return matrix[0].traverse([] (double d)-> double {return 1/cos(d);});
 }
 
-Matrix exp(const Matrix &matrix) {
-    return matrix.traverse(exp);
+Matrix exp(const vector<Matrix> &matrix) {
+    return matrix[0].traverse(exp);
 }
 
-Matrix pow(const Matrix &base, const Matrix &exponent) {
-    return base.traverse(pow, exponent);
+/**
+ * matrix[0] base
+ * matrix[1] exponent
+ * @param matrix
+ * @return
+ */
+Matrix pow(const vector<Matrix> &matrix) {
+    return matrix[0].traverse(pow, matrix[1]);
 }
 
-Matrix ln(const Matrix &matrix) {
-    return matrix.traverse(log);
+Matrix ln(const vector<Matrix> &matrix) {
+    return matrix[0].traverse(log);
 }
 
-Matrix log(const Matrix &base, const Matrix &natural) {
-    return  base.traverse([] (double b, double n)-> double {return log(n) / log(b);}, natural);
+/**
+ * matrix[0] base
+ * matrix[1] natural
+ * @param matrix
+ * @return
+ */
+Matrix log(const vector<Matrix> &matrix) {
+    return  matrix[0].traverse([] (double b, double n)-> double {return log(n) / log(b);}, matrix[1]);
 }
 
-Matrix arcsin(const Matrix &matrix) {
-    return  matrix.traverse(asin);
+Matrix arcsin(const vector<Matrix> &matrix) {
+    return  matrix[0].traverse(asin);
 }
 
-Matrix arccos(const Matrix &matrix) {
-    return matrix.traverse(acos);
+Matrix arccos(const vector<Matrix> &matrix) {
+    return matrix[0].traverse(acos);
 }
 
-Matrix arctan(const Matrix &matrix) {
-    return matrix.traverse(atan);
+Matrix arctan(const vector<Matrix> &matrix) {
+    return matrix[0].traverse(atan);
 }
 
-map<string, Func1> map_func1 = {
+map<string, Func> map_func = {
         {"sin", sin},{"cos", cos}, {"tan", tan}, {"cot", cot}, {"csc", csc}, {"sec", sec},
         {"arcsin", arcsin}, {"arccos", arccos}, {"arctan", arctan},
-        {"ln", ln}, {"exp", exp}};
-
-map<string, Func2> map_func2 = {
-        {{"log", log}, {"pow", pow}}
-};
+        {"ln", ln}, {"log", log}, {"exp", exp}, {"pow", pow}};

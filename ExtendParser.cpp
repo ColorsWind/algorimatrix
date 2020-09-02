@@ -5,7 +5,6 @@
 #include "ExtendParser.h"
 #include <iostream>
 #include <vector>
-#include "MatrixFunc.h"
 using std::cerr;
 using std::endl;
 using std::vector;
@@ -110,8 +109,8 @@ Matrix ExtendParser::processF() {
     } else if (m_token.getType() == NUMBER) {
         result = m_token.asNumber();
         this->advance();
-    } else if (m_token.getType() == FUNCTION_1) {
-        Func1 func = m_token.asFunction1();
+    } else if (m_token.getType() == FUNCTION) {
+        Func func = m_token.asFunction();
         this->advance();
         if (!m_token.isEquls('(')) {
             cerr << "ERROR processF() : Expect '('" << endl;
@@ -119,22 +118,7 @@ Matrix ExtendParser::processF() {
         }
         this->advance();
         auto expr = processL();
-        result = func(expr[0]);
-        if (!m_token.isEquls(')')) {
-            cerr << "ERROR processF() : Expect ')'" << endl;
-            throw;
-        }
-        this->advance();
-    } else if (m_token.getType() == FUNCTION_2) {
-        Func2 func = m_token.asFunction2();
-        this->advance();
-        if (!m_token.isEquls('(')) {
-            cerr << "ERROR processF() : Expect '('" << endl;
-            throw;
-        }
-        this->advance();
-        auto expr = processL();
-        result = func(expr[0], expr[1]);
+        result = func(expr);
         if (!m_token.isEquls(')')) {
             cerr << "ERROR processF() : Expect ')'" << endl;
             throw;

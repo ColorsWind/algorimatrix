@@ -52,7 +52,6 @@ public:
     Matrix traverse(double (func)(double,double), const Matrix &parameter) const;
 };
 
-typedef Matrix (*Func1)(const Matrix&);
-typedef Matrix (*Func2)(const Matrix&, const Matrix&);
+typedef Matrix (*Func)(const vector<Matrix>&);
 
 #endif ALGORIMATRIX_MATRIX_H
