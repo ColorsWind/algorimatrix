@@ -248,6 +248,8 @@ int Matrix::getCol() const {
     return m_col;
 }
 
+Matrix::Matrix() : Matrix(0,0){}
+
 
 
 

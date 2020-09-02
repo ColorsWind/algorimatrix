@@ -18,7 +18,30 @@ Token &ExtendParser::getToken(){
     return m_token;
 }
 
- Matrix ExtendParser::processE() {
+Matrix ExtendParser::processS() {
+    this->advance();
+    Matrix result(0,0);
+    if (m_token.getType() == VARIABLE) {
+        string var = m_token.asString();
+        this->advance();
+        if (m_token.isEquls('=')) {
+            this->advance();
+            result = m_matrix[var] = processE();
+        } else {
+            result = m_matrix[var];
+        }
+    } else {
+        result = processE();
+    }
+    if (m_token.isEquls(';')) {
+        this->advance();
+        return Matrix(0,0);
+    } else {
+        return result;
+    }
+}
+
+Matrix ExtendParser::processE() {
     Matrix result = processT();
     while(m_token.getType() == OPERATOR) {
         char c = m_token.asChar();
@@ -80,6 +103,10 @@ Matrix ExtendParser::processF() {
         result = processM();
         if (m_token.isEquls(']')) this->advance();
         else cerr << "ERROR processF() : Expect ']'" << endl;
+    } else if (m_token.getType() == VARIABLE) {
+        string str = m_token.asString();
+        this->advance();
+        return m_matrix[str];
     } else if (m_token.getType() == NUMBER) {
         result = m_token.asNumber();
         this->advance();
@@ -154,6 +181,12 @@ Matrix ExtendParser::processM()
 }
 
 
-ExtendParser::ExtendParser(TokenStream &tokenStream) : m_stream(tokenStream), m_token(Token(END)) {}
+ExtendParser::ExtendParser() : m_stream(TokenStream()), m_token(Token(END)) {}
+
+void ExtendParser::input(string str) {
+    m_token = Token(END);
+    m_stream.input(str);
+}
+
 
 

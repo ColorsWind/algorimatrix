@@ -18,6 +18,7 @@ private:
     double* m_array;
 public:
     ~Matrix();
+    Matrix();
     Matrix(const Matrix &matrix);
     Matrix(double number);
     Matrix(int row, int col);

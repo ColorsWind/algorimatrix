@@ -13,7 +13,13 @@ inline bool isLowerCaseWord(char c);
 inline bool isUpperCaseWord(char c);
 inline bool isWord(char c);
 
-TokenStream::TokenStream(string command): m_input(command), m_offset(0), m_end(false) {}
+TokenStream::TokenStream() {}
+
+void TokenStream::input(string &str) {
+    m_input = str;
+    m_offset = 0;
+    m_end = false;
+}
 
 Token TokenStream::next() {
     char c = m_input[m_offset];
@@ -88,6 +94,7 @@ Token TokenStream::readWord() {
     }
     return Token(VARIABLE, value, value);
 }
+
 
 static bool isOperator(char c) {
     for(char i : OPERATORS) {

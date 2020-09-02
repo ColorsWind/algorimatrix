@@ -9,7 +9,7 @@
 
 using std::string;
 using std::ostream;
-const static char OPERATORS[] = {'+', '-', '*', '/'};
+const static char OPERATORS[] = {'+', '-', '*', '/', '='};
 const static char DELIMITERS[] = {'(', ')', '[', ']', ',', ';'};
 const static string BLACKS = {' ', '\r', '\n', '\f'};
 

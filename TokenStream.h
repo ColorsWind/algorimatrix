@@ -11,17 +11,19 @@
 using std::string;
 class TokenStream {
 private:
-    const string m_input;
+    string m_input;
     int m_offset;
     bool m_end;
     Token readNumber();
     Token readWord();
 public:
-    explicit TokenStream(string m_command);
+    TokenStream();
     bool hasNext();
     Token next();
 
     long long int readDigit();
+
+    void input(string &str);
 };
 
 

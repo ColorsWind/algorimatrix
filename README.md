@@ -5,10 +5,11 @@
 ## 产生式
 
 ```
+S -> [VARIABLE=]E[;]
 E -> T{(+|-)T}
 T -> U{(*|/)U}
 U -> -F | +F | F
-F -> (E) | FUNCTION(L) | VARIABLE | [M] | NUMBER
+F -> (E) | FUNCTION(L) | VARIABLE | \[M\] | NUMBER
 L -> E{,E}
 M -> L{;L}
 ```
@@ -16,6 +17,7 @@ M -> L{;L}
 各符合的含义
 
 ```
+S: start, 文法开始符号
 E: expression, 表达式
 T: term, 表达式项
 U: unary, 一元式

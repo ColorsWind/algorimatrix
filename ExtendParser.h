@@ -6,10 +6,12 @@
 #define ALGORIMATRIX_EXTENDPARSER_H
 
 #include <iostream>
+#include <map>
 #include "TokenStream.h"
 #include "Matrix.h"
 #include "Token.h"
 using std::string;
+using std::map;
 
 // E -> T{(+|-)T}
 // T -> U{(*|/)U}
@@ -20,18 +22,19 @@ class ExtendParser {
 private:
     TokenStream m_stream;
     Token m_token;
+    map<string, Matrix> m_matrix;
 public:
-    ExtendParser(TokenStream & tokenStream);
+    ExtendParser();
     void advance();
     Token & getToken();
+    Matrix processS();
     Matrix processE();
     Matrix processT();
     Matrix processU();
     Matrix processF();
     vector<struct Matrix> processL();
-
-
     Matrix processM();
+    void input(string basicString);
 };
 
 
