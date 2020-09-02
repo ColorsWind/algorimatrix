@@ -6,30 +6,35 @@
 #define ALGORIMATRIX_EXTENDPARSER_H
 
 #include <iostream>
+#include <map>
 #include "TokenStream.h"
+#include "Matrix.h"
 #include "Token.h"
 using std::string;
+using std::map;
 
 // E -> T{(+|-)T}
 // T -> U{(*|/)U}
 // U -> -F | +F | F
-// F -> (E) | FUNCTION(L) | VARIABLE | [L] | NUMBER
+// F -> (E) | FUNCTION_1(L) | VARIABLE | [L] | NUMBER
 // L  -> E{,E}
 class ExtendParser {
 private:
     TokenStream m_stream;
     Token m_token;
+    map<string, Matrix> m_matrix;
 public:
-    ExtendParser(TokenStream & tokenStream);
+    ExtendParser();
     void advance();
     Token & getToken();
-    double processE();
-    double processT();
-    double processU();
-    double processF();
-    double processL();
-
-
+    Matrix processS();
+    Matrix processE();
+    Matrix processT();
+    Matrix processU();
+    Matrix processF();
+    vector<struct Matrix> processL();
+    Matrix processM();
+    void input(string basicString);
 };
 
 

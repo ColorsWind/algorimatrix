@@ -1,8 +1,39 @@
 #include "Matrix.h"
+#include <sstream>
+using std::to_string;
+using std::copy;
 
-Matrix::Matrix(int row, int col) : m_row(row), m_col(col), m_array(new double[row * col]) {}
+Matrix::~Matrix() {
+    delete [] m_array;
+    m_array = NULL;
+}
 
-Matrix::Matrix(int row, int col, double *array) : m_row(row), m_col(col), m_array(array) {}
+Matrix::Matrix(int row, int col) : m_row(row), m_col(col) {
+    m_array = new double[size()];
+}
+
+Matrix::Matrix(const Matrix &matrix) : Matrix(matrix.m_row, matrix.m_col) {
+    copy(matrix.m_array, matrix.m_array + size(), m_array);
+}
+
+Matrix::Matrix(int row, int col, double *array) : Matrix(row, col) {
+    copy(array, array + size(), m_array);
+}
+
+Matrix::Matrix(vector<double> &array) : Matrix(1, array.size()) {
+    copy(array.begin(), array.end(), m_array);
+}
+
+Matrix &Matrix::operator=(const Matrix &m) {
+    if (size() != m.size()) {
+        delete [] m_array;
+        m_array = new double[m.size()];
+    }
+    m_col = m.m_col;
+    m_row = m.m_row;
+    copy(m.m_array, m.m_array + size(), m_array);
+    return *this;
+}
 
 Matrix &Matrix::operator+=(const Matrix & m) {
     for (int i = 0; i < size(); i++)
@@ -17,14 +48,7 @@ Matrix &Matrix::operator-=(const Matrix & m) {
 };
 
 Matrix &Matrix::operator*=(const Matrix & m) {
-    m_col = m.m_col;
-    for (int i = 0; i < m_row; i++)
-        for (int j = 0; j < m_col; j++) {
-            double v = 0;
-            for (int k = 0; k < m.m_row; k++)
-                v += at(i, k) * m.read(k, j);
-            at(i, j) = v;
-        }
+    *this = *this * m;
     return *this;
 }
 
@@ -118,13 +142,23 @@ Matrix Matrix::inverse() const{
     return matrix;
 }
 
-Matrix Matrix::function(double (func)(double)) const{
-    Matrix matrix = *this;
+Matrix Matrix::traverse(double (func)(double)) const{
+    Matrix matrix(m_row, m_col);
     for (int k = 0; k < matrix.size(); k++) {
-        matrix.m_array[k] = func(matrix.m_array[k]);
+        matrix[k] = func(m_array[k]);
     }
     return  matrix;
 }
+
+
+Matrix Matrix::traverse(double (*func)(double, double), const Matrix &parameter) const {
+    Matrix matrix(m_row, m_col);
+    for(int k=0;k<matrix.size();k++) {
+        matrix[k] = func(m_array[k], parameter.m_array[k]);
+    }
+    return matrix;
+}
+
 
 Matrix Matrix::adjoint() const {
     Matrix matrix = *this;
@@ -135,6 +169,9 @@ Matrix Matrix::adjoint() const {
     }
     return matrix;
 }
+
+
+
 
 Matrix operator+(const Matrix m1, const Matrix m2) {
     Matrix matrix = m1;
@@ -149,8 +186,15 @@ Matrix operator-(const Matrix m1, const Matrix m2) {
 }
 
 Matrix operator*(const Matrix m1, const Matrix m2) {
-    Matrix matrix = m1;
-    matrix *= m2;
+    Matrix matrix(m1.m_row, m2.m_col);
+    for(int i=0;i<matrix.m_row;i++) {
+        for(int j=0;j<matrix.m_col;j++) {
+            double v = 0;
+            for(int k=0;k<m1.m_col;k++)
+                v += m1.read(i, k) * m2.read(k, j);
+            matrix.at(i, j) = v;
+        }
+    }
     return matrix;
 }
 
@@ -159,6 +203,59 @@ Matrix operator/(const Matrix m1, const Matrix m2) {
     matrix /= m2;
     return matrix;
 }
+
+Matrix::Matrix(double number) : Matrix(1, 1, &number) {}
+
+Matrix operator+(const Matrix m) {
+    return Matrix(m);
+}
+
+Matrix operator-(const Matrix m) {
+    Matrix matrix(m);
+    for(int k=0;k<matrix.size();k++) {
+        matrix[k] = -matrix[k];
+    }
+    return matrix;
+}
+
+double &Matrix::operator[](const int k) {
+    return m_array[k];
+}
+
+string Matrix::toString() const {
+    if (this->size() == 0) {
+        return "!Empty Matrix";
+    } else if (this->size() == 1) {
+        return to_string(m_array[0]);
+    } else {
+        string str;
+        for(int i=0;i<m_row;i++) {
+            for(int j=0;j<m_col;j++) {
+                str.append(" ");
+                str.append(to_string(read(i, j)));
+            }
+            str.append("\n");
+        }
+        return str;
+    }
+}
+
+int Matrix::getRow() const {
+    return m_row;
+}
+
+int Matrix::getCol() const {
+    return m_col;
+}
+
+Matrix::Matrix() : Matrix(0,0){}
+
+
+
+
+
+
+
 
 
 
