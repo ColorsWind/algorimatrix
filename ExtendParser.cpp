@@ -126,6 +126,7 @@ Matrix ExtendParser::processF() {
         this->advance();
     } else {
         cerr <<  "ERROR processF() : Unexpected Token " << m_token.toString() << endl;
+
         throw;
     }
     return result;

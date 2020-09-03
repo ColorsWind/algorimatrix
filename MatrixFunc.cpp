@@ -3,8 +3,14 @@
 //
 #include "MatrixFunc.h"
 
+
+bool isZero(double d) {
+    return abs(d) < EPS;
+}
+
+
 Matrix sin(const vector<Matrix> &matrix) {
-    return matrix[0].traverse(sin);
+        return matrix[0].traverse(sin);
 }
 
 Matrix cos(const vector<Matrix> &matrix) {
@@ -67,8 +73,120 @@ Matrix arccos(const vector<Matrix> &matrix) {
 Matrix arctan(const vector<Matrix> &matrix) {
     return matrix[0].traverse(atan);
 }
+Matrix triu(const vector<Matrix> &matrix) {
+    Matrix upper(matrix[0]);
+    upper.upperTriangular();
+    return upper;
+}
+
+
+Matrix det(const vector<Matrix> &matrix) {
+    return matrix[0].det();
+}
+
+Matrix inverse(const vector<Matrix> &matrix) {
+    return matrix[0].inverse();
+}
+
+Matrix size(const vector<Matrix> &matrix) {
+    Matrix m(1, 2);
+    m[0] = matrix[0].getRow();
+    m[1] = matrix[1].getCol();
+    return m;
+}
+
+Matrix sub(const vector<Matrix> &matrix) {
+    return matrix[0].sub(matrix[1][0]-1, matrix[2][0], matrix[3][0]-1, matrix[4][0]);
+}
+
+
+
+Matrix zeros(const vector<Matrix> &matrix) {
+    if (matrix.size() == 1) {
+        Matrix sizeM = matrix[0];
+        if (sizeM.size() == 1) {
+            return zeros(sizeM[0]);
+        } else if (sizeM.size() == 2) {
+            return zeros(sizeM[0], sizeM[1]);
+        }
+    } else if (matrix.size() == 2) {
+        return zeros(matrix[0][0], matrix[1][0]);
+    }
+    throw;
+}
+
+Matrix ident(const vector<Matrix> &matrix) {
+    if (matrix.size() == 1) {
+        return identity(matrix[0][0]);
+    } else if (matrix.size() == 2) {
+        return identity(matrix[0][0], matrix[1][0]);
+    }
+    throw;
+}
+
+Matrix row(const vector<Matrix> &matrix) {
+    return matrix[0].getRow();
+}
+
+Matrix col(const vector<Matrix> &matrix) {
+    return matrix[1].getCol();
+}
+
+
+Matrix swap(const vector<Matrix> &matrix) {
+    Matrix result(matrix[0]);
+    result.swapLine(matrix[1][0]-1, matrix[2][1]-1);
+    return result;
+}
+
+Matrix add(const vector<Matrix> &matrix) {
+    Matrix result(matrix[0]);
+    if (matrix.size() == 3) {
+        result.addByAnother(matrix[1][0]-1, matrix[2][0]-1);
+    } else if (matrix.size() == 4) {
+        result.addByAnother(matrix[1][0]-1, matrix[2][0]-1, matrix[3][0]);
+    } else {
+        throw;
+    }
+    return result;
+}
+
+Matrix multiply(const vector<Matrix> &matrix) {
+    Matrix result(matrix[0]);
+    result.multiplyLine(matrix[1][0] -1, matrix[2][0]);
+    return result;
+}
+
+Matrix adjoint(const vector<Matrix> &matrix) {
+    return matrix[0].adjoint();
+}
+
+Matrix cofactor(const vector<Matrix> &matrix) {
+    return matrix[0].cofactor(matrix[1][0], matrix[2][0]);
+}
+
+Matrix rank(const vector<Matrix> &matrix) {
+    return matrix[0].rank();
+}
+
 
 map<string, Func> map_func = {
-        {"sin", sin},{"cos", cos}, {"tan", tan}, {"cot", cot}, {"csc", csc}, {"sec", sec},
+        {"sin", sin},{"cos", cos}, {"tan", tan}, {"cot", cot},
+        {"csc", csc}, {"sec", sec},
         {"arcsin", arcsin}, {"arccos", arccos}, {"arctan", arctan},
-        {"ln", ln}, {"log", log}, {"exp", exp}, {"pow", pow}};
+        {"ln", ln}, {"log", log}, {"exp", exp}, {"pow", pow},
+        {"triu", triu}, {"det", det}, {"inv", inverse},
+        {"swap", swap}, {"add", add}, {"multiply", multiply},
+        {"sub", sub}, {"zeros", zeros}, {"ident", ident},
+        {"adjoint", adjoint}, {"cofactor", cofactor},
+        {"size", size}, {"row", row}, {"col", col}, {"rank", rank}
+};
+
+
+
+
+
+
+
+
+
