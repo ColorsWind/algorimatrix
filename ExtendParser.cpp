@@ -5,7 +5,6 @@
 #include "ExtendParser.h"
 #include <iostream>
 #include <vector>
-#include "MatrixFunc.h"
 using std::cerr;
 using std::endl;
 using std::vector;
@@ -102,31 +101,19 @@ Matrix ExtendParser::processF() {
         this->advance();
         result = processM();
         if (m_token.isEquls(']')) this->advance();
-        else cerr << "ERROR processF() : Expect ']'" << endl;
+        else  {
+            cerr << "ERROR processF() : Expect ']'" << endl;
+            throw;
+        }
     } else if (m_token.getType() == VARIABLE) {
         string str = m_token.asString();
         this->advance();
         return m_matrix[str];
     } else if (m_token.getType() == NUMBER) {
-        result = m_token.asNumber();
+        result = Matrix(m_token.asNumber());
         this->advance();
-    } else if (m_token.getType() == FUNCTION_1) {
-        Func1 func = m_token.asFunction1();
-        this->advance();
-        if (!m_token.isEquls('(')) {
-            cerr << "ERROR processF() : Expect '('" << endl;
-            throw;
-        }
-        this->advance();
-        auto expr = processL();
-        result = func(expr[0]);
-        if (!m_token.isEquls(')')) {
-            cerr << "ERROR processF() : Expect ')'" << endl;
-            throw;
-        }
-        this->advance();
-    } else if (m_token.getType() == FUNCTION_2) {
-        Func2 func = m_token.asFunction2();
+    } else if (m_token.getType() == FUNCTION) {
+        Func func = m_token.asFunction();
         this->advance();
         if (!m_token.isEquls('(')) {
             cerr << "ERROR processF() : Expect '('" << endl;
@@ -134,7 +121,7 @@ Matrix ExtendParser::processF() {
         }
         this->advance();
         auto expr = processL();
-        result = func(expr[0], expr[1]);
+        result = func(expr);
         if (!m_token.isEquls(')')) {
             cerr << "ERROR processF() : Expect ')'" << endl;
             throw;
@@ -142,6 +129,7 @@ Matrix ExtendParser::processF() {
         this->advance();
     } else {
         cerr <<  "ERROR processF() : Unexpected Token " << m_token.toString() << endl;
+
         throw;
     }
     return result;
@@ -157,27 +145,15 @@ vector<Matrix> ExtendParser::processL() {
     return arr;
 }
 
-Matrix ExtendParser::processM()
-{
+Matrix ExtendParser::processM() {
     vector<vector<Matrix>> arr;
     arr.push_back(processL());
     while(m_token.isEquls(';')) {
         this->advance();
         arr.push_back(processL());
     }
-    int row = arr.size();
-    int col = arr.front().size();
-    Matrix matrix(row, col);
-    for(int i=0;i<row;i++) {
-        vector<Matrix> &line = arr[i];
-        if (line.size() != col) {
-            cerr << "ERROR processM() : Inconsistent number of elements in row vector.";
-            throw;
-        }
-        for(int j=0;j<col;j++)
-            matrix.at(i, j) = line[j][0];
-    }
-    return matrix;
+    ObjectMatrix<Matrix> block(arr);
+    return fromBlock(block);
 }
 
 

@@ -1,37 +1,27 @@
 #include "Matrix.h"
+#include "MatrixFunc.h"
 #include <sstream>
 using std::to_string;
 using std::copy;
+using std::cerr;
+using std::endl;
 
-Matrix::~Matrix() {
-    delete [] m_array;
-    m_array = NULL;
-}
-
-Matrix::Matrix(int row, int col) : m_row(row), m_col(col) {
-    m_array = new double[size()];
-}
-
-Matrix::Matrix(const Matrix &matrix) : Matrix(matrix.m_row, matrix.m_col) {
-    copy(matrix.m_array, matrix.m_array + size(), m_array);
-}
-
-Matrix::Matrix(int row, int col, double *array) : Matrix(row, col) {
-    copy(array, array + size(), m_array);
-}
-
-Matrix::Matrix(vector<double> &array) : Matrix(1, array.size()) {
-    copy(array.begin(), array.end(), m_array);
-}
-
-Matrix &Matrix::operator=(const Matrix &m) {
-    if (size() != m.size()) {
-        delete [] m_array;
-        m_array = new double[m.size()];
+Matrix identity(int n, double factor) {
+    Matrix matrix = zeros(n);
+    for(int k=0;k<n;k++) {
+        matrix.at(k, k) = factor;
     }
-    m_col = m.m_col;
-    m_row = m.m_row;
-    copy(m.m_array, m.m_array + size(), m_array);
+    return matrix;
+}
+
+Matrix::Matrix(int row, int col) : ObjectMatrix<double>(row, col) {}
+
+Matrix::Matrix(const Matrix &matrix) : ObjectMatrix<double>(matrix) {};
+
+Matrix::Matrix(int row, int col, double *array) : ObjectMatrix<double>(row, col, array) {}
+
+Matrix &Matrix::operator=(const Matrix & m) {
+    ObjectMatrix::operator=(m);
     return *this;
 }
 
@@ -39,13 +29,13 @@ Matrix &Matrix::operator+=(const Matrix & m) {
     for (int i = 0; i < size(); i++)
         this->m_array[i] += m.m_array[i];
     return *this;
-};
+}
 
 Matrix &Matrix::operator-=(const Matrix & m) {
     for (int i = 0; i < size(); i++)
         this->m_array[i] -= m.m_array[i];
     return *this;
-};
+}
 
 Matrix &Matrix::operator*=(const Matrix & m) {
     *this = *this * m;
@@ -57,68 +47,6 @@ Matrix &Matrix::operator/=(const Matrix & m) {
     return *this;
 }
 
-void Matrix::swapRow(int i, int j) {
-    double temp;
-    for (int k = 0; k < m_col; k++) {
-        temp = at(i, k);
-        at(i, k) = at(j, k);
-        at(j, k) = temp;
-    }
-}
-
-void Matrix::swapCol(int i, int j) {
-    double temp;
-    for (int k = 0; k < m_row; k++) {
-        temp = at(k, i);
-        at(k, i) = at(k, j);
-        at(k, j) = temp;
-    }
-}
-
-double Matrix::det() const {
-    Matrix copy = *this;
-    int ii, jj, k, u;
-    int iter = 0;  //记录行变换的次数（交换）
-    double result = 1, yin;
-    int n = m_row;
-    for (ii = 0; ii < n; ii++) {
-        if (copy.at(ii, ii) == 0)
-
-            for (jj = ii; jj < n; jj++) {
-                if (copy.at(jj, ii) != 0) {
-                    copy.swapRow(ii, jj);
-                    iter++;
-                }
-            }
-
-        for (k = ii + 1; k < n; k++) {
-            yin = -1 * copy.at(k, ii) / copy.at(ii, ii);
-
-            for (u = 0; u < n; u++) {
-                copy.at(k, u) = copy.at(k, u) + copy.at(ii, u) * yin;
-            }
-        }
-    }
-    for (ii = 0; ii < n; ii++)  //求对角线的积 即 行列式的值
-        result = result * copy.at(ii, ii);
-    //行变换偶数次符号不变
-    if (iter % 2 == 1)
-        result = -result;
-    return (result);
-}
-
-int Matrix::size() const{
-    return m_row * m_col;
-}
-
-double &Matrix::at(int row, int col) {
-    return m_array[row * m_col + col];
-}
-
-double Matrix::read(int row, int col) const{
-    return m_array[row * m_col + col];
-}
-
 Matrix Matrix::cofactor(int row, int col) const{
     Matrix matrix(m_row - 1, m_col - 1);
     int k = 0;
@@ -126,21 +54,14 @@ Matrix Matrix::cofactor(int row, int col) const{
         if (i == row) continue;
         for (int j = 0; j < m_col; j++) {
             if (j == col) continue;
-            matrix.m_array[k] = read(row, col);
+            matrix[k] = at(i, j);
             k++;
         }
     }
     return matrix;
 }
 
-Matrix Matrix::inverse() const{
-    Matrix matrix = adjoint();
-    double det = this -> det();
-    for (int k = 0; k < matrix.size(); k++) {
-        matrix.m_array[k] /= det;
-    }
-    return matrix;
-}
+
 
 Matrix Matrix::traverse(double (func)(double)) const{
     Matrix matrix(m_row, m_col);
@@ -160,45 +81,48 @@ Matrix Matrix::traverse(double (*func)(double, double), const Matrix &parameter)
 }
 
 
-Matrix Matrix::adjoint() const {
-    Matrix matrix = *this;
-    for (int i = 0; i < m_row; i++) {
-        for (int j = 0; j < m_col; j++) {
-            matrix.at(i, j) = cofactor(i, j).det();
-        }
-    }
-    return matrix;
-}
 
-
-
-
-Matrix operator+(const Matrix m1, const Matrix m2) {
+Matrix operator+(const Matrix& m1, const Matrix& m2) {
     Matrix matrix = m1;
     matrix += m2;
     return m1;
 }
 
-Matrix operator-(const Matrix m1, const Matrix m2) {
+Matrix operator-(const Matrix& m1, const Matrix& m2) {
     Matrix matrix = m1;
     matrix-= m2;
     return matrix;
 }
+Matrix operator*(double factor, const Matrix& matrix) {
+    Matrix multiply(matrix);
+    for(int k=0;k<multiply.size();k++) multiply[k] *= factor;
+    return multiply;
+}
 
-Matrix operator*(const Matrix m1, const Matrix m2) {
+Matrix operator*(const Matrix& matrix, double factor) {
+    return operator*(factor, matrix);
+}
+
+Matrix operator*(const Matrix& m1, const Matrix& m2) {
+    if (m1.size() == 1) {
+        return operator*(m1[0], m2);
+    }
+    if (m2.size() == 1) {
+        return operator*(m2, m1[0]);
+    }
     Matrix matrix(m1.m_row, m2.m_col);
     for(int i=0;i<matrix.m_row;i++) {
         for(int j=0;j<matrix.m_col;j++) {
             double v = 0;
             for(int k=0;k<m1.m_col;k++)
-                v += m1.read(i, k) * m2.read(k, j);
+                v += m1.at(i, k) * m2.at(k, j);
             matrix.at(i, j) = v;
         }
     }
     return matrix;
 }
 
-Matrix operator/(const Matrix m1, const Matrix m2) {
+Matrix operator/(const Matrix& m1, const Matrix& m2) {
     Matrix matrix = m1;
     matrix /= m2;
     return matrix;
@@ -206,11 +130,11 @@ Matrix operator/(const Matrix m1, const Matrix m2) {
 
 Matrix::Matrix(double number) : Matrix(1, 1, &number) {}
 
-Matrix operator+(const Matrix m) {
+Matrix operator+(const Matrix& m) {
     return Matrix(m);
 }
 
-Matrix operator-(const Matrix m) {
+Matrix operator-(const Matrix& m) {
     Matrix matrix(m);
     for(int k=0;k<matrix.size();k++) {
         matrix[k] = -matrix[k];
@@ -218,8 +142,38 @@ Matrix operator-(const Matrix m) {
     return matrix;
 }
 
-double &Matrix::operator[](const int k) {
-    return m_array[k];
+Matrix zeros(int n) {
+    return zeros(n, n);
+}
+
+Matrix zeros(int row, int col) {
+    Matrix matrix(row, col);
+    for(int k=0;k<matrix.size();k++) matrix[k] = 0.0;
+    return matrix;
+}
+
+Matrix fromBlock(ObjectMatrix<Matrix> block) {
+    int totalRow = 0, totalCol = 0; // total;
+    for(int i=0;i<block.rows();i++) totalRow += block.at(i, 0).rows();
+    for(int j=0;j<block.cols();j++) totalCol += block.at(0, j).cols();
+    Matrix matrix(totalRow, totalCol);
+
+    int row = 0, col = 0; // line vector index
+
+    // ergodic
+    for(int i=0;i<block.rows();i++) {
+        for(int j=0;j<block.cols();j++) {
+            Matrix &sub = block.at(i, j);
+            for(int k=0;k<sub.rows();k++) {
+                copy(sub.m_array + sub.first(k), sub.m_array + sub.first(k+1) , matrix.m_array + matrix.first(row + k) + col);
+            }
+            col += sub.cols();
+        }
+        row += block.at(i, 0).rows();
+        col = 0;
+    }
+
+    return matrix;
 }
 
 string Matrix::toString() const {
@@ -232,7 +186,7 @@ string Matrix::toString() const {
         for(int i=0;i<m_row;i++) {
             for(int j=0;j<m_col;j++) {
                 str.append(" ");
-                str.append(to_string(read(i, j)));
+                str.append(to_string(at(i, j)));
             }
             str.append("\n");
         }
@@ -240,23 +194,158 @@ string Matrix::toString() const {
     }
 }
 
-int Matrix::getRow() const {
-    return m_row;
-}
-
-int Matrix::getCol() const {
-    return m_col;
-}
-
 Matrix::Matrix() : Matrix(0,0){}
 
+void Matrix::addByAnother(int i, int j, double factor) {
+    for(int k=0; k < m_col; k++) {
+        at(i, k) += factor * at(j, k);
+    }
+}
+
+void Matrix::multiplyLine(int i, double factor) {
+    for(int k=0; k < m_col; k++) {
+        at(i, k) *= factor;
+    }
+}
+
+void Matrix::swapLine(int i, int j) {
+    double tmp;
+    for(int k=0; k < m_col; k++) {
+        tmp = at(i, k);
+        at(i, k) = at(j, k);
+        at(j, k) = tmp;
+    }
+}
+
+void Matrix::upperTriangular() {
+    if (size() <= 1) return;
+    int k=0;
+    for(int j=0;j<m_col;j++) {
+        int noneZero = -1;
+        for(int i=k;i<m_row;i++) {
+            if (!isZero(at(i, j))) {
+                noneZero = i;
+                break;
+            }
+        }
+        if (noneZero < 0) {
+            continue;
+        } else {
+            if (noneZero != k) addByAnother(k, noneZero);
+            for(int i=j+1;i<m_row;i++) {
+                addByAnother(i, j, -at(i, j) / at(k, j));
+            }
+            k++;
+        }
+    }
+}
+
+Matrix Matrix::adjoint() const {
+    double d = det();
+    if (isZero(d)) {
+        Matrix matrix(*this);
+        for (int i = 0; i < m_row; i++) {
+            for (int j = 0; j < m_col; j++) {
+                matrix.at(i, j) = cofactor(i, j).det();
+            }
+        }
+        return matrix;
+    } else {
+        return d * inverse();
+    }
+}
 
 
+double Matrix::det() const {
+    Matrix upper = Matrix(*this);
+    upper.upperTriangular();
+    double result = 1;
+    for(int k=0;k<m_row;k++) {
+        result *= upper.at(k, k);
+    }
+    return result;
+}
 
+Matrix Matrix::inverse() const{
+    Matrix inv = identity(m_row);
+    Matrix matrix(*this);
+    if (size() < 0) return *this;
+    if (size() == 1) {
+        matrix[0] = 1 / matrix[0];
+        return matrix;
+    }
+    // upper triangular
+    int k=0;
+    for(int j=0;j<m_col;j++) {
+        int noneZero = -1;
+        for(int i=k;i<m_row;i++) {
+            if (!isZero(at(i, j))) {
+                noneZero = i;
+                break;
+            }
+        }
+        if (noneZero < 0) {
+            continue;
+        } else {
+            if (noneZero != k) {
+                matrix.addByAnother(k, noneZero);
+                inv.addByAnother(k, noneZero);
+            }
+            for(int i=k+1;i<m_row;i++) {
+                double  factor = - matrix.at(i, j) / matrix.at(k, j);
+                matrix.addByAnother(i, j, factor);
+                inv.addByAnother(i, j, factor);
+            }
+            k++;
+        }
+    }
+    // check principal diagonal and unitize
+    for(int l=0; l < m_row; l++) {
+        double d = matrix.at(l, l);
+        if (isZero(d)) {
+            cerr << "Matrix is not invertible" << endl;
+            throw;
+        } else {
+            double factor = 1/d;
+            matrix.multiplyLine(l, factor);
+            inv.multiplyLine(l, factor);
+        }
+    }
+    // lower triangular
+    for(int j=1;j<m_col;j++) {
+        for(int i=0;i<j;i++) {
+            double factor = -matrix.at(i, j); // matrix.at(j, j) = 1.0
+            matrix.addByAnother(i, j, factor);
+            inv.addByAnother(i, j, factor);
+        }
+    }
+    return inv;
+}
 
+Matrix Matrix::sub(int row1, int row2, int col1, int col2) const {
+    Matrix matrix(row2-row1, col2-col1);
+    for(int i=0;i<matrix.m_row;i++) {
+        for(int j=0;j<matrix.m_col;j++) {
+            matrix.at(i, j) = at(i + row1, j + col1);
+        }
+    }
+    return matrix;
+}
 
-
-
+int Matrix::rank() const {
+    Matrix matrix(*this);
+    matrix.upperTriangular();
+    int r = m_row;
+    int j = m_col - 1;
+    for(int i = m_row -1; i >= 0; i--) {
+        if (isZero(at(i, j))) {
+            r--;
+        } else {
+            break;
+        }
+    }
+    return r;
+}
 
 
 

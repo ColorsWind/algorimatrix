@@ -84,13 +84,9 @@ Token TokenStream::readWord() {
         value += c;
         m_offset++;
     }
-    auto it1 = map_func1.find(value);
-    if (it1 != map_func1.end()) {
-        return Token(FUNCTION_1, it1 -> second, value);
-    }
-    auto it2 = map_func2.find(value);
-    if (it2 != map_func2.end()) {
-        return Token(FUNCTION_2, it2 -> second, value);
+    auto it = map_func.find(value);
+    if (it != map_func.end()) {
+        return Token(FUNCTION, it -> second, value);
     }
     return Token(VARIABLE, value, value);
 }
@@ -132,7 +128,7 @@ bool isLowerCaseWord(char c) {
 }
 
 bool isUpperCaseWord(char c) {
-    if (c >= 'A' && c <='a') {
+    if (c >= 'A' && c <='Z') {
         return true;
     }
     return false;

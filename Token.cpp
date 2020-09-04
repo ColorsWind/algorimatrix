@@ -16,10 +16,8 @@ string Token::toString() const {
             return string("Number{") + to_string(asNumber()) + "}";
         case VARIABLE:
             return string("Variable{\"") + asString() + "\"}";
-        case FUNCTION_1:
-            return string("Function1{") + getRawText() + "}";
-        case FUNCTION_2:
-            return string("Function2{") + getRawText() + "}";
+        case FUNCTION:
+            return string("Function{") + getRawText() + "}";
         case END:
             return "END{}";
         default:
@@ -28,7 +26,7 @@ string Token::toString() const {
 }
 
 Token::Token(TokenType type, void *p, const string &origin): m_type(type), m_value(p), m_origin(origin) {}
-Token::Token(TokenType type, Func1 p, const string &origin): m_type(type), m_origin(origin) {
+Token::Token(TokenType type, Func p, const string &origin): m_type(type), m_origin(origin) {
     m_value = p;
 }
 
@@ -71,13 +69,10 @@ double Token::asNumber() const {
     return *(double*)m_value;
 }
 
-Func1 Token::asFunction1() const {
-    return (Func1)m_value;
+Func Token::asFunction() const {
+    return (Func)m_value;
 }
 
-Func2 Token::asFunction2() const {
-    return (Func2)m_value;
-}
 
 Token::Token(TokenType type, double d, const string &origin) : m_type(type), m_value(new double(d)), m_origin(origin){}
 Token::Token(TokenType type, char c, const string &origin) : m_type(type), m_value(new char(c)), m_origin(origin){}
@@ -106,7 +101,7 @@ void *Token::copyValue() const {
             return new double(asNumber());
         case VARIABLE:
             return new string(asString());
-        case FUNCTION_1:
+        case FUNCTION:
             return m_value;
         case END:
         default:

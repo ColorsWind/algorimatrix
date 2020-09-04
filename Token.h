@@ -14,10 +14,9 @@ const static char DELIMITERS[] = {'(', ')', '[', ']', ',', ';'};
 const static string BLACKS = {' ', '\r', '\n', '\f'};
 
 
-enum TokenType {VARIABLE, NUMBER, FUNCTION_1, FUNCTION_2, OPERATOR, DELIMITER, END};
+enum TokenType {VARIABLE, NUMBER, FUNCTION, OPERATOR, DELIMITER, END};
 class Token {
 protected:
-
     TokenType m_type;
     void* m_value;
     string m_origin;
@@ -37,11 +36,10 @@ public:
     bool isEquls(char c) const;
     TokenType getType() const;
     void* copyValue() const;
-    Func1 asFunction1() const;
-    Func2 asFunction2() const;
+    Func asFunction() const;
     const string &getRawText() const;
 
-    Token(TokenType type, Func1 p, const string &origin);
+    Token(TokenType type, Func p, const string &origin);
 };
 
 #endif //ALGORIMATRIX_TOKEN_H
