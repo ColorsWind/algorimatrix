@@ -4,15 +4,22 @@
 
 #ifndef ALGORIMATRIX_OBJECTMATRIX_H
 #define ALGORIMATRIX_OBJECTMATRIX_H
+#include <iostream>
+#include <vector>
+
+
+using std::vector;
+
 template <typename Object>
 class ObjectMatrix {
 protected:
-    int m_row{};
-    int m_col{};
-    Object* m_array;
+    int m_row;
+    int m_col;
+    Object *m_array;
 public:
     ~ObjectMatrix ();
     ObjectMatrix();
+    explicit ObjectMatrix(vector<vector<Object>> &array);
     ObjectMatrix(const ObjectMatrix &matrix);
     ObjectMatrix(int row, int col);
     ObjectMatrix(int row, int col, Object *array);
@@ -101,7 +108,7 @@ int ObjectMatrix<Object>::size() const {
 
 template<typename Object>
 int ObjectMatrix<Object>::first(int row) const {
-    return m_row * row;
+    return m_col * row;
 }
 
 template<typename Object>
@@ -136,5 +143,16 @@ void ObjectMatrix<Object>::swapCol(int i, int j) {
     }
 }
 
+template<typename Object>
+ObjectMatrix<Object>::ObjectMatrix(vector<vector<Object>> &array) {
+    m_row = array.size();
+    m_col = array[0].size();
+    m_array = new Object[m_row * m_col];
+    for(int k=0;k<m_row;k++) {
+        vector<Object> &sub = array[k];
+        copy(sub.begin(), sub.end(), m_array + first(k));
+    }
+}
 
-#endif //ALGORIMATRIX_OBJECTMATRIX_H
+
+#endif ALGORIMATRIX_OBJECTMATRIX_H
