@@ -16,7 +16,7 @@ Matrix identity(int n, double factor) {
 
 Matrix::Matrix(int row, int col) : ObjectMatrix<double>(row, col) {}
 
-Matrix::Matrix(const Matrix &matrix)  : ObjectMatrix<double>(matrix) {}
+Matrix::Matrix(const Matrix &matrix) = default;
 
 Matrix::Matrix(int row, int col, double *array) : ObjectMatrix<double>(row, col, array) {}
 

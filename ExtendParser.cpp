@@ -107,7 +107,7 @@ Matrix ExtendParser::processF() {
         this->advance();
         return m_matrix[str];
     } else if (m_token.getType() == NUMBER) {
-        result = m_token.asNumber();
+        result = Matrix(m_token.asNumber());
         this->advance();
     } else if (m_token.getType() == FUNCTION) {
         Func func = m_token.asFunction();

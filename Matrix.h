@@ -16,7 +16,7 @@ class Matrix : public ObjectMatrix<double> {
 public:
     Matrix();
     Matrix(const Matrix &matrix);
-    Matrix(double number);
+    explicit Matrix(double number);
     Matrix(int row, int col);
     Matrix(int row, int col, double* array);
     Matrix & operator=(const Matrix & m);

@@ -81,7 +81,7 @@ Matrix triu(const vector<Matrix> &matrix) {
 
 
 Matrix det(const vector<Matrix> &matrix) {
-    return matrix[0].det();
+    return Matrix(matrix[0].det());
 }
 
 Matrix inverse(const vector<Matrix> &matrix) {
@@ -96,7 +96,7 @@ Matrix size(const vector<Matrix> &matrix) {
 }
 
 Matrix sub(const vector<Matrix> &matrix) {
-    return matrix[0].sub(matrix[1][0]-1, matrix[2][0], matrix[3][0]-1, matrix[4][0]);
+    return matrix[0].sub((int)matrix[1][0]-1, (int)matrix[2][0], (int)matrix[3][0]-1, (int)matrix[4][0]);
 }
 
 
@@ -125,26 +125,26 @@ Matrix ident(const vector<Matrix> &matrix) {
 }
 
 Matrix row(const vector<Matrix> &matrix) {
-    return matrix[0].rows();
+    return Matrix(matrix[0].rows());
 }
 
 Matrix col(const vector<Matrix> &matrix) {
-    return matrix[1].cols();
+    return Matrix(matrix[1].cols());
 }
 
 
 Matrix swap(const vector<Matrix> &matrix) {
     Matrix result(matrix[0]);
-    result.swapLine(matrix[1][0]-1, matrix[2][1]-1);
+    result.swapLine((int)matrix[1][0]-1, (int)matrix[2][1]-1);
     return result;
 }
 
 Matrix add(const vector<Matrix> &matrix) {
     Matrix result(matrix[0]);
     if (matrix.size() == 3) {
-        result.addByAnother(matrix[1][0]-1, matrix[2][0]-1);
+        result.addByAnother((int)matrix[1][0]-1, (int)matrix[2][0]-1);
     } else if (matrix.size() == 4) {
-        result.addByAnother(matrix[1][0]-1, matrix[2][0]-1, matrix[3][0]);
+        result.addByAnother((int)matrix[1][0]-1, (int)matrix[2][0]-1, (int)matrix[3][0]);
     } else {
         throw;
     }
@@ -153,7 +153,7 @@ Matrix add(const vector<Matrix> &matrix) {
 
 Matrix multiply(const vector<Matrix> &matrix) {
     Matrix result(matrix[0]);
-    result.multiplyLine(matrix[1][0] -1, matrix[2][0]);
+    result.multiplyLine((int)matrix[1][0] -1, (int)matrix[2][0]);
     return result;
 }
 
@@ -162,11 +162,11 @@ Matrix adjoint(const vector<Matrix> &matrix) {
 }
 
 Matrix cofactor(const vector<Matrix> &matrix) {
-    return matrix[0].cofactor(matrix[1][0], matrix[2][0]);
+    return matrix[0].cofactor((int)matrix[1][0], (int)matrix[2][0]);
 }
 
 Matrix rank(const vector<Matrix> &matrix) {
-    return matrix[0].rank();
+    return Matrix(matrix[0].rank());
 }
 
 
