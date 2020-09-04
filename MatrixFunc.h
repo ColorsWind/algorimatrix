@@ -9,6 +9,7 @@
 #include <cmath>
 #include <map>
 using std::map;
+
 const static double PI = acos(-1.0);
 const static double E = exp(1.0);
 const static double EPS = 10E-5;
@@ -51,4 +52,4 @@ Matrix rank(const vector<Matrix> &matrix);
 
 extern map<string, Func> map_func;
 
-#endif //ALGORIMATRIX_MATRIXFUNC_H
+#endif ALGORIMATRIX_MATRIXFUNC_H

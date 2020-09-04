@@ -10,7 +10,7 @@ bool isZero(double d) {
 
 
 Matrix sin(const vector<Matrix> &matrix) {
-        return matrix[0].traverse(sin);
+    return matrix[0].traverse(sin);
 }
 
 Matrix cos(const vector<Matrix> &matrix) {

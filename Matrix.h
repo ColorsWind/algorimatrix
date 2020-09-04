@@ -33,7 +33,7 @@ public:
     Matrix friend operator*(const Matrix& matrix, double factor);
     Matrix friend operator*(double factor, const Matrix& matrix);
     Matrix friend operator/(const Matrix& m1, const Matrix& m2);
-
+    Matrix friend fromBlock(ObjectMatrix<Matrix> block);
 
     // primary line transformation
     void addByAnother(int i, int j, double factor=1.0);

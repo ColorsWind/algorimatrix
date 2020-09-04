@@ -101,7 +101,10 @@ Matrix ExtendParser::processF() {
         this->advance();
         result = processM();
         if (m_token.isEquls(']')) this->advance();
-        else cerr << "ERROR processF() : Expect ']'" << endl;
+        else  {
+            cerr << "ERROR processF() : Expect ']'" << endl;
+            throw;
+        }
     } else if (m_token.getType() == VARIABLE) {
         string str = m_token.asString();
         this->advance();
@@ -142,27 +145,15 @@ vector<Matrix> ExtendParser::processL() {
     return arr;
 }
 
-Matrix ExtendParser::processM()
-{
+Matrix ExtendParser::processM() {
     vector<vector<Matrix>> arr;
     arr.push_back(processL());
     while(m_token.isEquls(';')) {
         this->advance();
         arr.push_back(processL());
     }
-    int row = arr.size();
-    int col = arr.front().size();
-    Matrix matrix(row, col);
-    for(int i=0;i<row;i++) {
-        vector<Matrix> &line = arr[i];
-        if (line.size() != col) {
-            cerr << "ERROR processM() : Inconsistent number of elements in row vector.";
-            throw;
-        }
-        for(int j=0;j<col;j++)
-            matrix.at(i, j) = line[j][0];
-    }
-    return matrix;
+    ObjectMatrix<Matrix> block(arr);
+    return fromBlock(block);
 }
 
 

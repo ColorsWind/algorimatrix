@@ -16,7 +16,7 @@ Matrix identity(int n, double factor) {
 
 Matrix::Matrix(int row, int col) : ObjectMatrix<double>(row, col) {}
 
-Matrix::Matrix(const Matrix &matrix) = default;
+Matrix::Matrix(const Matrix &matrix) : ObjectMatrix<double>(matrix) {};
 
 Matrix::Matrix(int row, int col, double *array) : ObjectMatrix<double>(row, col, array) {}
 
@@ -149,6 +149,30 @@ Matrix zeros(int n) {
 Matrix zeros(int row, int col) {
     Matrix matrix(row, col);
     for(int k=0;k<matrix.size();k++) matrix[k] = 0.0;
+    return matrix;
+}
+
+Matrix fromBlock(ObjectMatrix<Matrix> block) {
+    int totalRow = 0, totalCol = 0; // total;
+    for(int i=0;i<block.rows();i++) totalRow += block.at(i, 0).rows();
+    for(int j=0;j<block.cols();j++) totalCol += block.at(0, j).cols();
+    Matrix matrix(totalRow, totalCol);
+
+    int row = 0, col = 0; // line vector index
+
+    // ergodic
+    for(int i=0;i<block.rows();i++) {
+        for(int j=0;j<block.cols();j++) {
+            Matrix &sub = block.at(i, j);
+            for(int k=0;k<sub.rows();k++) {
+                copy(sub.m_array + sub.first(k), sub.m_array + sub.first(k+1) , matrix.m_array + matrix.first(row + k) + col);
+            }
+            col += sub.cols();
+        }
+        row += block.at(i, 0).rows();
+        col = 0;
+    }
+
     return matrix;
 }
 
