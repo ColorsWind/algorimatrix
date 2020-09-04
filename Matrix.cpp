@@ -14,35 +14,14 @@ Matrix identity(int n, double factor) {
     return matrix;
 }
 
-Matrix::~Matrix() {
-    delete [] m_array;
-    m_array = NULL;
-}
+Matrix::Matrix(int row, int col) : ObjectMatrix<double>(row, col) {}
 
-Matrix::Matrix(int row, int col) : m_row(row), m_col(col) {
-    m_array = new double[size()];
-}
+Matrix::Matrix(const Matrix &matrix)  : ObjectMatrix<double>(matrix) {}
 
-Matrix::Matrix(const Matrix &matrix) : Matrix(matrix.m_row, matrix.m_col) {
-    copy(matrix.m_array, matrix.m_array + size(), m_array);
-}
+Matrix::Matrix(int row, int col, double *array) : ObjectMatrix<double>(row, col, array) {}
 
-Matrix::Matrix(int row, int col, double *array) : Matrix(row, col) {
-    copy(array, array + size(), m_array);
-}
-
-Matrix::Matrix(vector<double> &array) : Matrix(1, array.size()) {
-    copy(array.begin(), array.end(), m_array);
-}
-
-Matrix &Matrix::operator=(const Matrix &m) {
-    if (size() != m.size()) {
-        delete [] m_array;
-        m_array = new double[m.size()];
-    }
-    m_col = m.m_col;
-    m_row = m.m_row;
-    copy(m.m_array, m.m_array + size(), m_array);
+Matrix &Matrix::operator=(const Matrix & m) {
+    ObjectMatrix::operator=(m);
     return *this;
 }
 
@@ -50,13 +29,13 @@ Matrix &Matrix::operator+=(const Matrix & m) {
     for (int i = 0; i < size(); i++)
         this->m_array[i] += m.m_array[i];
     return *this;
-};
+}
 
 Matrix &Matrix::operator-=(const Matrix & m) {
     for (int i = 0; i < size(); i++)
         this->m_array[i] -= m.m_array[i];
     return *this;
-};
+}
 
 Matrix &Matrix::operator*=(const Matrix & m) {
     *this = *this * m;
@@ -68,25 +47,6 @@ Matrix &Matrix::operator/=(const Matrix & m) {
     return *this;
 }
 
-
-int Matrix::size() const{
-    return m_row * m_col;
-}
-
-int Matrix::firstIndex(int row) const{
-    return row * m_col;
-}
-
-double &Matrix::at(int row, int col) {
-    return m_array[firstIndex(row) + col];
-}
-
-double Matrix::read(int row, int col) const{
-    return m_array[firstIndex(row) + col];
-}
-
-
-
 Matrix Matrix::cofactor(int row, int col) const{
     Matrix matrix(m_row - 1, m_col - 1);
     int k = 0;
@@ -94,7 +54,7 @@ Matrix Matrix::cofactor(int row, int col) const{
         if (i == row) continue;
         for (int j = 0; j < m_col; j++) {
             if (j == col) continue;
-            matrix[k] = read(i, j);
+            matrix[k] = at(i, j);
             k++;
         }
     }
@@ -122,28 +82,28 @@ Matrix Matrix::traverse(double (*func)(double, double), const Matrix &parameter)
 
 
 
-Matrix operator+(const Matrix m1, const Matrix m2) {
+Matrix operator+(const Matrix& m1, const Matrix& m2) {
     Matrix matrix = m1;
     matrix += m2;
     return m1;
 }
 
-Matrix operator-(const Matrix m1, const Matrix m2) {
+Matrix operator-(const Matrix& m1, const Matrix& m2) {
     Matrix matrix = m1;
     matrix-= m2;
     return matrix;
 }
-Matrix operator*(const double factor, const Matrix matrix) {
+Matrix operator*(double factor, const Matrix& matrix) {
     Matrix multiply(matrix);
     for(int k=0;k<multiply.size();k++) multiply[k] *= factor;
     return multiply;
 }
 
-Matrix operator*(const Matrix matrix, const double factor) {
+Matrix operator*(const Matrix& matrix, double factor) {
     return operator*(factor, matrix);
 }
 
-Matrix operator*(const Matrix m1, const Matrix m2) {
+Matrix operator*(const Matrix& m1, const Matrix& m2) {
     if (m1.size() == 1) {
         return operator*(m1[0], m2);
     }
@@ -155,14 +115,14 @@ Matrix operator*(const Matrix m1, const Matrix m2) {
         for(int j=0;j<matrix.m_col;j++) {
             double v = 0;
             for(int k=0;k<m1.m_col;k++)
-                v += m1.read(i, k) * m2.read(k, j);
+                v += m1.at(i, k) * m2.at(k, j);
             matrix.at(i, j) = v;
         }
     }
     return matrix;
 }
 
-Matrix operator/(const Matrix m1, const Matrix m2) {
+Matrix operator/(const Matrix& m1, const Matrix& m2) {
     Matrix matrix = m1;
     matrix /= m2;
     return matrix;
@@ -170,11 +130,11 @@ Matrix operator/(const Matrix m1, const Matrix m2) {
 
 Matrix::Matrix(double number) : Matrix(1, 1, &number) {}
 
-Matrix operator+(const Matrix m) {
+Matrix operator+(const Matrix& m) {
     return Matrix(m);
 }
 
-Matrix operator-(const Matrix m) {
+Matrix operator-(const Matrix& m) {
     Matrix matrix(m);
     for(int k=0;k<matrix.size();k++) {
         matrix[k] = -matrix[k];
@@ -192,15 +152,6 @@ Matrix zeros(int row, int col) {
     return matrix;
 }
 
-
-double &Matrix::operator[](const int k) {
-    return m_array[k];
-}
-
-double &Matrix::operator[](const int k) const {
-    return m_array[k];
-}
-
 string Matrix::toString() const {
     if (this->size() == 0) {
         return "!Empty Matrix";
@@ -211,7 +162,7 @@ string Matrix::toString() const {
         for(int i=0;i<m_row;i++) {
             for(int j=0;j<m_col;j++) {
                 str.append(" ");
-                str.append(to_string(read(i, j)));
+                str.append(to_string(at(i, j)));
             }
             str.append("\n");
         }
@@ -219,21 +170,11 @@ string Matrix::toString() const {
     }
 }
 
-
-
-int Matrix::getRow() const {
-    return m_row;
-}
-
-int Matrix::getCol() const {
-    return m_col;
-}
-
 Matrix::Matrix() : Matrix(0,0){}
 
 void Matrix::addByAnother(int i, int j, double factor) {
     for(int k=0; k < m_col; k++) {
-        at(i, k) += factor * read(j, k);
+        at(i, k) += factor * at(j, k);
     }
 }
 
@@ -246,8 +187,8 @@ void Matrix::multiplyLine(int i, double factor) {
 void Matrix::swapLine(int i, int j) {
     double tmp;
     for(int k=0; k < m_col; k++) {
-        tmp = read(i, k);
-        at(i, k) = read(j, k);
+        tmp = at(i, k);
+        at(i, k) = at(j, k);
         at(j, k) = tmp;
     }
 }
@@ -258,7 +199,7 @@ void Matrix::upperTriangular() {
     for(int j=0;j<m_col;j++) {
         int noneZero = -1;
         for(int i=k;i<m_row;i++) {
-            if (!isZero(read(i, j))) {
+            if (!isZero(at(i, j))) {
                 noneZero = i;
                 break;
             }
@@ -268,7 +209,7 @@ void Matrix::upperTriangular() {
         } else {
             if (noneZero != k) addByAnother(k, noneZero);
             for(int i=j+1;i<m_row;i++) {
-                addByAnother(i, j, -read(i, j) / read(k, j));
+                addByAnother(i, j, -at(i, j) / at(k, j));
             }
             k++;
         }
@@ -296,7 +237,7 @@ double Matrix::det() const {
     upper.upperTriangular();
     double result = 1;
     for(int k=0;k<m_row;k++) {
-        result *= upper.read(k, k);
+        result *= upper.at(k, k);
     }
     return result;
 }
@@ -314,7 +255,7 @@ Matrix Matrix::inverse() const{
     for(int j=0;j<m_col;j++) {
         int noneZero = -1;
         for(int i=k;i<m_row;i++) {
-            if (!isZero(read(i, j))) {
+            if (!isZero(at(i, j))) {
                 noneZero = i;
                 break;
             }
@@ -327,7 +268,7 @@ Matrix Matrix::inverse() const{
                 inv.addByAnother(k, noneZero);
             }
             for(int i=k+1;i<m_row;i++) {
-                double  factor = - matrix.read(i, j) / matrix.read(k, j);
+                double  factor = - matrix.at(i, j) / matrix.at(k, j);
                 matrix.addByAnother(i, j, factor);
                 inv.addByAnother(i, j, factor);
             }
@@ -335,21 +276,21 @@ Matrix Matrix::inverse() const{
         }
     }
     // check principal diagonal and unitize
-    for(int k=0;k<m_row;k++) {
-        double d = matrix.read(k,k);
+    for(int l=0; l < m_row; l++) {
+        double d = matrix.at(l, l);
         if (isZero(d)) {
             cerr << "Matrix is not invertible" << endl;
             throw;
         } else {
             double factor = 1/d;
-            matrix.multiplyLine(k, factor);
-            inv.multiplyLine(k, factor);
+            matrix.multiplyLine(l, factor);
+            inv.multiplyLine(l, factor);
         }
     }
     // lower triangular
     for(int j=1;j<m_col;j++) {
         for(int i=0;i<j;i++) {
-            double factor = -matrix.read(i, j); // matrix.read(j, j) = 1.0
+            double factor = -matrix.at(i, j); // matrix.at(j, j) = 1.0
             matrix.addByAnother(i, j, factor);
             inv.addByAnother(i, j, factor);
         }
@@ -361,7 +302,7 @@ Matrix Matrix::sub(int row1, int row2, int col1, int col2) const {
     Matrix matrix(row2-row1, col2-col1);
     for(int i=0;i<matrix.m_row;i++) {
         for(int j=0;j<matrix.m_col;j++) {
-            matrix.at(i, j) = read(i + row1, j + col1);
+            matrix.at(i, j) = at(i + row1, j + col1);
         }
     }
     return matrix;
@@ -373,7 +314,7 @@ int Matrix::rank() const {
     int r = m_row;
     int j = m_col - 1;
     for(int i = m_row -1; i >= 0; i--) {
-        if (isZero(read(i, j))) {
+        if (isZero(at(i, j))) {
             r--;
         } else {
             break;
@@ -381,5 +322,7 @@ int Matrix::rank() const {
     }
     return r;
 }
+
+
 
 

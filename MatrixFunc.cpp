@@ -90,8 +90,8 @@ Matrix inverse(const vector<Matrix> &matrix) {
 
 Matrix size(const vector<Matrix> &matrix) {
     Matrix m(1, 2);
-    m[0] = matrix[0].getRow();
-    m[1] = matrix[1].getCol();
+    m[0] = matrix[0].rows();
+    m[1] = matrix[1].cols();
     return m;
 }
 
@@ -125,11 +125,11 @@ Matrix ident(const vector<Matrix> &matrix) {
 }
 
 Matrix row(const vector<Matrix> &matrix) {
-    return matrix[0].getRow();
+    return matrix[0].rows();
 }
 
 Matrix col(const vector<Matrix> &matrix) {
-    return matrix[1].getCol();
+    return matrix[1].cols();
 }
 
 
