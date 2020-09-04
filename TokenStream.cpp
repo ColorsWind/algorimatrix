@@ -128,7 +128,7 @@ bool isLowerCaseWord(char c) {
 }
 
 bool isUpperCaseWord(char c) {
-    if (c >= 'A' && c <='a') {
+    if (c >= 'A' && c <='Z') {
         return true;
     }
     return false;
