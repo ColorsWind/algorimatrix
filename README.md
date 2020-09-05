@@ -9,7 +9,7 @@ S -> [VARIABLE=]E[;]
 E -> T{(+|-)T}
 T -> U{(*|/)U}
 U -> -F | +F | F
-F -> (E) | FUNCTION(L) | VARIABLE | \[M\] | NUMBER
+F -> (E) | FUNCTION[(L)] | VARIABLE | \[M\] | NUMBER
 L -> E{,E}
 M -> L{;L}
 ```

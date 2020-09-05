@@ -115,21 +115,21 @@ Matrix ExtendParser::processF() {
     } else if (m_token.getType() == FUNCTION) {
         Func func = m_token.asFunction();
         this->advance();
-        if (!m_token.isEquls('(')) {
-            cerr << "ERROR processF() : Expect '('" << endl;
-            throw;
+        if (m_token.isEquls('(')) {
+            this->advance();
+            auto expr = processL();
+            result = func(expr);
+            if (!m_token.isEquls(')')) {
+                cerr << "ERROR processF() : Expect ')'" << endl;
+                throw;
+            }
+            this->advance();
+        } else {
+            result = Matrix(0,0);
         }
-        this->advance();
-        auto expr = processL();
-        result = func(expr);
-        if (!m_token.isEquls(')')) {
-            cerr << "ERROR processF() : Expect ')'" << endl;
-            throw;
-        }
-        this->advance();
+
     } else {
         cerr <<  "ERROR processF() : Unexpected Token " << m_token.toString() << endl;
-
         throw;
     }
     return result;
