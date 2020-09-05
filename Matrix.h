@@ -39,16 +39,19 @@ public:
     void addByAnother(int i, int j, double factor=1.0);
     void multiplyLine(int i, double factor);
     void swapLine(int i, int j);
-
     void upperTriangular();
+
+    // calculation of matrix attributes
     double det() const;
     int rank() const;
     Matrix inverse() const;
-
     Matrix sub(int row1, int row2, int col1, int col2) const;
     Matrix adjoint() const;
     Matrix cofactor(int i, int j) const;
+    Matrix transpose() const;
+
     string toString() const;
+
     Matrix traverse(double (func)(double)) const;
     Matrix traverse(double (func)(double,double), const Matrix &parameter) const;
 };

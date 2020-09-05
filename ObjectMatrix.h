@@ -4,20 +4,24 @@
 
 #ifndef ALGORIMATRIX_OBJECTMATRIX_H
 #define ALGORIMATRIX_OBJECTMATRIX_H
+
 #include <iostream>
 #include <vector>
-
-
+#include <sstream>
+#include "MatrixException.h"
 using std::vector;
+using std::string;
+using std::to_string;
+using std::copy;
 
 template <typename Object>
 class ObjectMatrix {
 protected:
-    int m_row;
-    int m_col;
+    int m_row{};
+    int m_col{};
     Object *m_array;
 public:
-    ~ObjectMatrix ();
+    ~ObjectMatrix();
     ObjectMatrix();
     explicit ObjectMatrix(vector<vector<Object>> &array);
     ObjectMatrix(const ObjectMatrix &matrix);
@@ -25,22 +29,26 @@ public:
     ObjectMatrix(int row, int col, Object *array);
 
     ObjectMatrix & operator=(const ObjectMatrix & m);
-    Object & operator[](int k);
-    Object & operator[](int k) const;
+    inline Object & operator[](int k);
+    inline Object & operator[](int k) const;
 
 
     inline int rows() const;
-
     inline int cols() const;
-
     inline int size() const;
+    inline string sizeString() const;
+    inline bool square() const;
 
     inline int first(int row) const;
     inline Object & at(int row, int col);
     inline const Object & at(int row, int col) const;
+    inline int safeIndex(int row, int col) const;
 
     void swapRow(int i, int j);
     void swapCol(int i, int j);
+    void reshape(int row, int col);
+
+
 };
 
 
@@ -122,6 +130,18 @@ const Object &ObjectMatrix<Object>::at(int row, int col) const {
 }
 
 template<typename Object>
+int ObjectMatrix<Object>::safeIndex(int row, int col) const {
+    int index = first(row) + col;
+    if (index < 0)
+        throw MatrixException("index must a nonnegative number");
+    else if (index < size())
+        return m_array[first(row) + col];
+    else
+        throw MatrixException("out of bound " + size() + " ("+ to_string(m_row) + "x" + to_string(m_col) + " matrix)");
+}
+
+
+template<typename Object>
 void ObjectMatrix<Object>::swapRow(int i, int j) {
     Object* tmp;
     int iFirst = first(i);
@@ -152,6 +172,26 @@ ObjectMatrix<Object>::ObjectMatrix(vector<vector<Object>> &array) {
         vector<Object> &sub = array[k];
         copy(sub.begin(), sub.end(), m_array + first(k));
     }
+}
+
+template<typename Object>
+bool ObjectMatrix<Object>::square() const {
+    return m_row == m_col;
+}
+
+template<typename Object>
+void ObjectMatrix<Object>::reshape(int row, int col) {
+    if (size() == row * col) {
+        m_row = row;
+        m_col = col;
+    }
+    throw MatrixException("Cannot reshape " + sizeString() + " matrix to "
+        + to_string(row) + "x" + to_string(col) + " matrix");
+}
+
+template<typename Object>
+string ObjectMatrix<Object>::sizeString() const {
+    return to_string(m_row) + "x" + to_string(m_col);
 }
 
 

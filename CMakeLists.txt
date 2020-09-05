@@ -3,4 +3,4 @@ project(algorimatrix)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(algorimatrix main.cpp Matrix.h Matrix.cpp Token.cpp Token.h TokenStream.cpp TokenStream.h ExtendParser.cpp ExtendParser.h MatrixFunc.cpp MatrixFunc.h ObjectMatrix.h)
+add_executable(algorimatrix main.cpp Matrix.h Matrix.cpp Token.cpp Token.h TokenStream.cpp TokenStream.h ExtendParser.cpp ExtendParser.h MatrixFunc.cpp MatrixFunc.h ObjectMatrix.h MatrixException.cpp MatrixException.h ParseException.cpp ParseException.h)
