@@ -3,14 +3,20 @@
 //
 
 #include "ExtendParser.h"
+#include "ParseException.h"
 #include <iostream>
 #include <vector>
-using std::cerr;
+using std::cout;
 using std::endl;
 using std::vector;
 using std::copy;
 void ExtendParser::advance() {
-    m_token = m_stream.next();
+    if (m_stream.hasNext()) {
+        m_token = m_stream.next();
+    } else {
+        throw ParseException("No more token");
+    }
+
 }
 
 Token &ExtendParser::getToken(){
@@ -19,25 +25,30 @@ Token &ExtendParser::getToken(){
 
 Matrix ExtendParser::processS() {
     this->advance();
+    string variable = "ans";
     Matrix result(0,0);
     if (m_token.getType() == VARIABLE) {
-        string var = m_token.asString();
+        variable = m_token.asString();
         this->advance();
         if (m_token.isEquls('=')) {
             this->advance();
-            result = m_matrix[var] = processE();
+            result = m_matrix[variable] = processE();
         } else {
-            result = m_matrix[var];
+            result = m_matrix[variable];
         }
     } else {
         result = processE();
     }
     if (m_token.isEquls(';')) {
         this->advance();
-        return Matrix(0,0);
     } else {
-        return result;
+        cout << variable << " = ";
+        if (result.size() > 1) cout << "\n";
+        cout << result.toString() << endl;
     }
+    if (m_token.getType() != END)
+        throw ParseException("Expected END token, but found " + m_token.toString());
+    return result;
 }
 
 Matrix ExtendParser::processE() {
@@ -84,8 +95,7 @@ Matrix ExtendParser::processU() {
             this->advance();
             return +processF();
         }
-        cerr << "ERROR processU()" << endl;
-        throw;
+        throw ParseException("Unexpected operator " + to_string(c));
     }
     return processF();
 }
@@ -95,15 +105,18 @@ Matrix ExtendParser::processF() {
     if (m_token.isEquls('(')) {
         this->advance();
         result = processE();
-        if (m_token.isEquls(')')) this->advance();
-        else cerr << "ERROR processF() : Expect ')'" << endl;
+        if (m_token.isEquls(')')) {
+            this->advance();
+        } else {
+            throw ParseException("Expect ')' but " + m_token.toString());
+        }
     } else if (m_token.isEquls('[')) {
         this->advance();
         result = processM();
-        if (m_token.isEquls(']')) this->advance();
-        else  {
-            cerr << "ERROR processF() : Expect ']'" << endl;
-            throw;
+        if (m_token.isEquls(']')) {
+            this->advance();
+        } else {
+            throw ParseException("Expect ']' but " + m_token.toString());
         }
     } else if (m_token.getType() == VARIABLE) {
         string str = m_token.asString();
@@ -119,17 +132,18 @@ Matrix ExtendParser::processF() {
             this->advance();
             auto expr = processL();
             result = func(expr);
-            if (!m_token.isEquls(')')) {
-                cerr << "ERROR processF() : Expect ')'" << endl;
+            if (m_token.isEquls(')')) {
+                this->advance();
+            } else {
+                throw ParseException("Expect ')' but " + m_token.toString());
                 throw;
             }
-            this->advance();
         } else {
             result = Matrix(0,0);
         }
 
     } else {
-        cerr <<  "ERROR processF() : Unexpected Token " << m_token.toString() << endl;
+        throw ParseException("Unexpect token " + m_token.toString());
         throw;
     }
     return result;

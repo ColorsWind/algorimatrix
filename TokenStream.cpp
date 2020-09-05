@@ -4,6 +4,7 @@
 
 #include "TokenStream.h"
 #include "MatrixFunc.h"
+#include "ParseException.h"
 
 static bool isOperator(char c);
 static bool isDelimiter(char c);
@@ -41,7 +42,7 @@ Token TokenStream::next() {
     } else if (isDigit(c)) {
         return readNumber();
     }
-    throw "CANNOT READ TOKEN";
+    throw ParseException("Unknown character '" + to_string(c) + "'(" + to_string((int)c) + ")");
 }
 bool TokenStream::hasNext() {
     return !m_end;

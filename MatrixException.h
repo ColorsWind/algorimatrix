@@ -17,7 +17,7 @@ public:
     MatrixException(string msg);
     string & msg();
     const char * what () const throw () {
-        return "Matrix Exception";
+        return "Matrix calculation exception";
     }
 };
 

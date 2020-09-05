@@ -4,25 +4,25 @@
 #include <iostream>
 #include "TokenStream.h"
 #include "ExtendParser.h"
+#include "ParseException.h"
 
-using namespace std;
+using std::cout;
+using std::cin;
+using std::endl;
+using std::cerr;
 int main() {
-    char a[100];
-    string command;
+    char ch[100];
     ExtendParser parser;
     while(true) {
-        cin.getline(a, 100);
-        command = a;
-        parser.input(command);
-        Matrix matrix = parser.processS();
-        if (parser.getToken().getType() != END) {
-            cerr << "ERROR not end";
+        cin.getline(ch, 256);
+        parser.input(ch);
+        try {
+            parser.processS();
+        } catch (MatrixException &exception) {
+            cerr << "ERROR: matrix error:\n\t" << exception.msg() << endl;
+        } catch (ParseException &exception) {
+            cerr << "ERROR: parse error:\n\t" << exception.msg() << endl;
         }
-        cout << "ANS = ";
-        if (matrix.size() > 1) {
-            cout << "\n";
-        }
-        cout << matrix.toString() << endl;
     }
 
 
