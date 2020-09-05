@@ -169,6 +169,16 @@ Matrix rank(const vector<Matrix> &matrix) {
     return Matrix(matrix[0].rank());
 }
 
+Matrix reshape(const vector<Matrix> &matrix) {
+    Matrix result = Matrix(matrix[0]);
+    result.reshape((int)matrix[1][0], (int)matrix[2][0]);
+    return result;
+}
+
+Matrix trans(const vector<Matrix> &matrix) {
+    return matrix[0].transpose();
+}
+
 
 map<string, Func> map_func = {
         {"sin", sin},{"cos", cos}, {"tan", tan}, {"cot", cot},
@@ -179,8 +189,10 @@ map<string, Func> map_func = {
         {"swap", swap}, {"add", add}, {"multiply", multiply},
         {"sub", sub}, {"zeros", zeros}, {"ident", ident},
         {"adjoint", adjoint}, {"cofactor", cofactor},
-        {"size", size}, {"row", row}, {"col", col}, {"rank", rank}
+        {"size", size}, {"row", row}, {"col", col}, {"rank", rank},
+        {"reshape", reshape}, {"trans", trans}
 };
+
 
 
 

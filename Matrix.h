@@ -48,7 +48,7 @@ public:
     Matrix sub(int row1, int row2, int col1, int col2) const;
     Matrix adjoint() const;
     Matrix cofactor(int i, int j) const;
-
+    Matrix transpose() const;
 
     string toString() const;
 

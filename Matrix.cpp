@@ -186,10 +186,10 @@ Matrix fromBlock(ObjectMatrix<Matrix> block) {
             Matrix &sub = block.at(i, j);
             // check size
             if (rows[i] != sub.rows())
-                throw MatrixException("Unexpected matrix size: " + sub.sizeString()
+                throw MatrixException("Cannot create matrix from blocks, unexpected matrix size: " + sub.sizeString()
                     + " (Expect row = " + to_string(rows[i]) + ")");
             if (cols[j] != sub.cols())
-                throw MatrixException("Unexpected matrix size: " + sub.sizeString()
+                throw MatrixException("Cannot create matrix from blocks, unexpected matrix size: " + sub.sizeString()
                     + " (Expect col = " + to_string(cols[j]) + ")");
 
             for(int k=0;k<sub.rows();k++) {
@@ -410,6 +410,16 @@ int Matrix::rank() const {
         }
     }
     return r;
+}
+
+Matrix Matrix::transpose() const {
+    Matrix matrix(m_col, m_row);
+    for(int i=0;i<m_row;i++) {
+        for(int j=0;j<m_col;j++) {
+            matrix.at(j, i) = at(i, j);
+        }
+    }
+    return matrix;
 }
 
 

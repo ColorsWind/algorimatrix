@@ -6,6 +6,8 @@
 #include "ParseException.h"
 #include <iostream>
 #include <vector>
+#include <iomanip>
+
 using std::cout;
 using std::endl;
 using std::vector;
@@ -116,7 +118,11 @@ Matrix ExtendParser::processF() {
     } else if (m_token.getType() == VARIABLE) {
         string str = m_token.asString();
         this->advance();
-        return m_matrix[str];
+        auto iter = m_matrix.find(str);
+        if (iter == m_matrix.end())
+            return Matrix(0,0);
+        else
+            return iter->second;
     } else if (m_token.getType() == NUMBER) {
         result = Matrix(m_token.asNumber());
         this->advance();
@@ -131,7 +137,6 @@ Matrix ExtendParser::processF() {
                 this->advance();
             } else {
                 throw ParseException("Expect ')' but " + m_token.toString());
-                throw;
             }
         } else {
             result = Matrix(0,0);
@@ -173,6 +178,25 @@ void ExtendParser::input(string str) {
     if (str.find('=') == string::npos)
         str.insert(0, "ans = ");
     m_stream.input(str);
+}
+
+using std::setw;
+void ExtendParser::printVariable() {
+    int width = 10;
+    for(auto iter = m_matrix.begin(); iter != m_matrix.end(); iter++) {
+        if (iter -> first.size() > width)
+            width = iter -> first.size();
+    }
+    for(int k=0;k<width+10;k++) cout << "-";
+    cout << endl;
+    cout << "|" << setw(width) << "Name" << "|" << setw(7) << "Size" << "|" << endl;
+    for(int k=0;k<width+10;k++) cout << "-";
+    cout << endl;
+    for(auto iter = m_matrix.begin(); iter != m_matrix.end(); iter++) {
+        cout << "|" << setw(width) << iter -> first << "|"  << setw(7) << iter->second.sizeString() << "|" << endl;
+    }
+    for(int k=0;k<width+10;k++) cout << "-";
+    cout << endl;
 }
 
 

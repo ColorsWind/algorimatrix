@@ -16,6 +16,10 @@ int main() {
     while(true) {
         cin.getline(ch, 256);
         parser.input(ch);
+        if (string(ch) == "vars") {
+            parser.printVariable();
+            continue;
+        }
         try {
             parser.processS();
         } catch (MatrixException &exception) {

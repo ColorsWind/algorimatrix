@@ -35,6 +35,8 @@ public:
     vector<struct Matrix> processL();
     Matrix processM();
     void input(string basicString);
+
+    void printVariable();
 };
 
 
