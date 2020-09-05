@@ -25,19 +25,14 @@ Token &ExtendParser::getToken(){
 
 Matrix ExtendParser::processS() {
     this->advance();
-    string variable = "ans";
     Matrix result(0,0);
-    if (m_token.getType() == VARIABLE) {
-        variable = m_token.asString();
+    string variable = m_token.asString();
+    this->advance();
+    if (m_token.isEquls('=')) {
         this->advance();
-        if (m_token.isEquls('=')) {
-            this->advance();
-            result = m_matrix[variable] = processE();
-        } else {
-            result = m_matrix[variable];
-        }
+        result = m_matrix[variable] = processE();
     } else {
-        result = processE();
+        result = m_matrix[variable];
     }
     if (m_token.isEquls(';')) {
         this->advance();
@@ -175,6 +170,8 @@ ExtendParser::ExtendParser() : m_stream(TokenStream()), m_token(Token(END)) {}
 
 void ExtendParser::input(string str) {
     m_token = Token(END);
+    if (str.find('=') == string::npos)
+        str.insert(0, "ans = ");
     m_stream.input(str);
 }
 
