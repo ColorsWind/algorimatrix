@@ -55,4 +55,4 @@ Matrix trans(const vector<Matrix> &matrix);
 
 extern map<string, Func> map_func;
 
-#endif ALGORIMATRIX_MATRIXFUNC_H
+#endif //ALGORIMATRIX_MATRIXFUNC_H

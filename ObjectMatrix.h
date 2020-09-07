@@ -195,4 +195,4 @@ string ObjectMatrix<Object>::sizeString() const {
 }
 
 
-#endif ALGORIMATRIX_OBJECTMATRIX_H
+#endif //ALGORIMATRIX_OBJECTMATRIX_H

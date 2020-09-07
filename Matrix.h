@@ -63,4 +63,4 @@ Matrix identity(int n, double factor=1.0);
 
 typedef Matrix (*Func)(const vector<Matrix>&);
 
-#endif ALGORIMATRIX_MATRIX_H
+#endif //ALGORIMATRIX_MATRIX_H
