@@ -28,6 +28,6 @@ add_executable(algorimatrix
         AlgorimatrixQt.h
         AlgorimatrixQt.cpp
         AlgorimatrixQt.ui
-        )
+        ParseResult.cpp ParseResult.h)
 
 target_link_libraries(algorimatrix Qt5::Widgets)

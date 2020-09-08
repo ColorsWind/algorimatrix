@@ -10,25 +10,26 @@
 #include "TokenStream.h"
 #include "Matrix.h"
 #include "Token.h"
+#include "ParseResult.h"
 using std::string;
 using std::map;
 
+const static string ANS = "ans";
 // E -> T{(+|-)T}
 // T -> U{(*|/)U}
 // U -> -F | +F | F
 // F -> (E) | FUNCTION_1(L) | VARIABLE | [L] | NUMBER
 // L  -> E{,E}
 class ExtendParser {
-private:
+protected:
     TokenStream m_stream;
     Token m_token;
-
-public:
     map<string, Matrix> m_matrix;
-    ExtendParser();
+public:
+    ExtendParser ();
     void advance();
     Token & getToken();
-    string processS();
+    ParseResult processS();
     Matrix processE();
     Matrix processT();
     Matrix processU();

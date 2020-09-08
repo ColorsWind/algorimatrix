@@ -10,11 +10,11 @@ E -> T{(+|-)T}
 T -> U{(*|/)U}
 U -> -F | +F | F
 F -> (E) | FUNCTION[(L)] | VARIABLE | [M] | NUMBER
-L -> E{,E}
-M -> L{;L}
+L -> E{,E} | ε 
+M -> L{;L} | ε
 ```
 
-各符合的含义
+各符号的含义
 
 ```
 S: start, 文法开始符号
@@ -24,5 +24,6 @@ U: unary, 一元式
 F: factor, 表达式项的因子
 L: expression list，表达式列表
 M: matrix, 矩阵
+ε：空字
 ```
 

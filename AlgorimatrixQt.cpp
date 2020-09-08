@@ -3,40 +3,47 @@
 #include "ParseException.h"
 #include "ExtendParser.h"
 #include <QStandardItemModel>
+#include <iostream>
+using std::endl;
 
 AlgorimatrixQt::AlgorimatrixQt(QWidget *parent)
     : QMainWindow(parent)
 {
-    ui.setupUi(this);
-    connect(ui.m_in, SIGNAL(returnPressed()), this, SLOT(onInput()));
+    m_ui.setupUi(this);
+    connect(m_ui.m_in, SIGNAL(returnPressed()), this, SLOT(onInput()));
     QStandardItemModel* model = new QStandardItemModel(this);
     model->setHorizontalHeaderItem(0, new QStandardItem("Name"));
     model->setHorizontalHeaderItem(1, new QStandardItem("Size"));
-    ui.m_map ->setModel(model);
+    m_ui.m_map ->setModel(model);
 }
 
-#include <iostream>
-using std::endl;
+
 void AlgorimatrixQt::onInput() {
-    QString qstr = ui.m_in-> text();
-    ExtendParser parser;
+    QString qstr = m_ui.m_in-> text();
     parser.input(qstr.toStdString());
     try {
-        ui.m_out -> appendPlainText(QString::fromStdString(parser.processS()));
+        ParseResult result = parser.processS();
+        m_ui.m_out -> appendPlainText(QString::fromStdString(result.getMessage()));
+        updateTable(result);
     } catch (MatrixException &exception) {
-        ui.m_out -> appendHtml(QString("<html><font color=\"#FF0000\">ERROR: matrix error:  ").append(QString::fromStdString(exception.msg())).append("</font></html>"));
+        m_ui.m_out -> appendHtml(QString("<html><font color=\"#FF0000\">ERROR: matrix error:  ").append(QString::fromStdString(exception.msg())).append("</font></html>"));
     } catch (ParseException &exception) {
-        ui.m_out -> appendHtml(QString("<html><font color=\"#FF0000\">ERROR: parse error:  ").append(QString::fromStdString(exception.msg())).append("</font></html>"));
+        m_ui.m_out -> appendHtml(QString("<html><font color=\"#FF0000\">ERROR: parse error:  ").append(QString::fromStdString(exception.msg())).append("</font></html>"));
     }
-    ui.m_in -> clear();
-    QStandardItemModel* model = new QStandardItemModel(this);
-    model->setHorizontalHeaderItem(0, new QStandardItem("Name"));
-    model->setHorizontalHeaderItem(1, new QStandardItem("Size"));
+    m_ui.m_in -> clear();
+}
 
-    int i = 0;
-    for(auto iter=parser.m_matrix.begin();i<parser.m_matrix.size();i++, iter++) {
-        model->setItem(i, 0,  new QStandardItem(QString::fromStdString(iter -> first)));
-        model->setItem(i, 1, new QStandardItem(QString::fromStdString(iter -> second.sizeString())));
+void AlgorimatrixQt::updateTable(ParseResult &result) {
+    QStandardItemModel* model = dynamic_cast<QStandardItemModel *>(m_ui.m_map->model());
+    QList<QStandardItem *> items = model -> findItems(QString::fromStdString(result.getVariable()));
+    if (result.isRemove() && items.size() > 0) {
+        model -> removeRow(items[0] -> row());
+    } else if (!result.isRemove() && items.size() > 0){
+        items[0] -> setText(QString::fromStdString(result.getSize()));
+    } else if (!result.isRemove() && items.size() == 0) {
+        int index = model->rowCount();
+        model->setItem(index, 0, new QStandardItem(QString::fromStdString(result.getVariable())));
+        model->setItem(index, 1, new QStandardItem(QString::fromStdString(result.getSize())));
+
     }
-    ui.m_map ->setModel(model);
 }
