@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <QStringListModel>
 #include <string>
 #include "ui_AlgorimatrixQt.h"
 #include "ParseResult.h"
@@ -16,7 +17,9 @@ public:
     AlgorimatrixQt(QWidget* parent = Q_NULLPTR);
 
 private:
-    ExtendParser parser;
-    Ui::AlgorimatrixQtClass m_ui{};
+    QStringList m_history;
+    ExtendParser m_parser;
+    QStringListModel* m_listModel;
+    Ui::AlgorimatrixQtClass m_ui;
     void updateTable(ParseResult &result);
 };
