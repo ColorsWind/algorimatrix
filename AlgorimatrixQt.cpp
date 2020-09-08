@@ -20,6 +20,7 @@ AlgorimatrixQt::AlgorimatrixQt(QWidget *parent)
 
 void AlgorimatrixQt::onInput() {
     QString qstr = m_ui.m_in-> text();
+    m_ui.m_out -> appendPlainText(">> " + qstr);
     parser.input(qstr.toStdString());
     try {
         ParseResult result = parser.processS();
