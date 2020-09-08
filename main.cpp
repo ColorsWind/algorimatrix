@@ -13,7 +13,7 @@ using std::endl;
 using std::cerr;
 int console();
 int main(int argc, char* argv[]) {
-    if (argc == 1 && argv[0] == "nogui") {
+    if (argc == 2 && strcmp("nogui", argv[1]) == 0) {
         return console();
     }
     QApplication a(argc, argv);
@@ -33,7 +33,7 @@ int console() {
             continue;
         }
         try {
-            cout << parser.processS() << endl;
+            cout << parser.processS().getMessage() << endl;
         } catch (MatrixException &exception) {
             cerr << "ERROR: matrix error:\n\t" << exception.msg() << endl;
         } catch (ParseException &exception) {
