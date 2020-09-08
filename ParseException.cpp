@@ -4,7 +4,7 @@
 
 #include "ParseException.h"
 
-ParseException::ParseException(string msg) : m_msg(msg) {}
+ParseException::ParseException(const string & msg) : m_msg(msg) {}
 
 string &ParseException::msg() {
     return m_msg;

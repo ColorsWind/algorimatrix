@@ -196,17 +196,17 @@ void ExtendParser::input(string str) {
 
 void ExtendParser::printVariable() {
     int width = 10;
-    for(auto iter = m_matrix.begin(); iter != m_matrix.end(); iter++) {
-        if (iter -> first.size() > width)
-            width = iter -> first.size();
+    for(auto & matrix : m_matrix) {
+        if (matrix.first.size() > width)
+            width = matrix.first.size();
     }
     for(int k=0;k<width+10;k++) cout << "-";
     cout << endl;
     cout << "|" << setw(width) << "Name" << "|" << setw(7) << "Size" << "|" << endl;
     for(int k=0;k<width+10;k++) cout << "-";
     cout << endl;
-    for(auto iter = m_matrix.begin(); iter != m_matrix.end(); iter++) {
-        cout << "|" << setw(width) << iter -> first << "|"  << setw(7) << iter->second.sizeString() << "|" << endl;
+    for(auto & matrix : m_matrix) {
+        cout << "|" << setw(width) << matrix.first << "|"  << setw(7) << matrix.second.sizeString() << "|" << endl;
     }
     for(int k=0;k<width+10;k++) cout << "-";
     cout << endl;

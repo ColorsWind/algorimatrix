@@ -1,7 +1,6 @@
 
 #include "AlgorimatrixQt.h"
 #include "ParseException.h"
-#include "ExtendParser.h"
 #include <QStandardItemModel>
 #include <iostream>
 using std::endl;
@@ -11,7 +10,7 @@ AlgorimatrixQt::AlgorimatrixQt(QWidget *parent)
 {
     m_ui.setupUi(this);
     connect(m_ui.m_in, SIGNAL(returnPressed()), this, SLOT(onInput()));
-    QStandardItemModel* model = new QStandardItemModel(this);
+    auto model = new QStandardItemModel(this);
     model->setHorizontalHeaderItem(0, new QStandardItem("Name"));
     model->setHorizontalHeaderItem(1, new QStandardItem("Size"));
     m_ui.m_map ->setModel(model);
@@ -35,13 +34,13 @@ void AlgorimatrixQt::onInput() {
 }
 
 void AlgorimatrixQt::updateTable(ParseResult &result) {
-    QStandardItemModel* model = dynamic_cast<QStandardItemModel *>(m_ui.m_map->model());
+    auto model = dynamic_cast<QStandardItemModel *>(m_ui.m_map->model());
     QList<QStandardItem *> items = model -> findItems(QString::fromStdString(result.getVariable()));
-    if (result.isRemove() && items.size() > 0) {
+    if (result.isRemove() && !items.empty()) {
         model -> removeRow(items[0] -> row());
-    } else if (!result.isRemove() && items.size() > 0){
+    } else if (!result.isRemove() && !items.empty()){
         items[0] -> setText(QString::fromStdString(result.getSize()));
-    } else if (!result.isRemove() && items.size() == 0) {
+    } else if (!result.isRemove() && items.empty()) {
         int index = model->rowCount();
         model->setItem(index, 0, new QStandardItem(QString::fromStdString(result.getVariable())));
         model->setItem(index, 1, new QStandardItem(QString::fromStdString(result.getSize())));

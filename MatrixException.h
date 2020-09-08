@@ -14,9 +14,9 @@ class MatrixException : public exception {
 private:
     string m_msg;
 public:
-    MatrixException(string msg);
+    explicit MatrixException(const string &msg);
     string & msg();
-    const char * what () const throw () {
+    const char * what () const noexcept override {
         return "Matrix calculation exception";
     }
 };

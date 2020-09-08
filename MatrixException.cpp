@@ -4,7 +4,7 @@
 
 #include "MatrixException.h"
 
-MatrixException::MatrixException(string msg) : m_msg(msg) {}
+MatrixException::MatrixException(const string &msg) : m_msg(msg) {}
 
 string &MatrixException::msg() {
     return m_msg;

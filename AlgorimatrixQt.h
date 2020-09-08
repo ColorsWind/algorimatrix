@@ -17,6 +17,6 @@ public:
 
 private:
     ExtendParser parser;
-    Ui::AlgorimatrixQtClass m_ui;
+    Ui::AlgorimatrixQtClass m_ui{};
     void updateTable(ParseResult &result);
 };

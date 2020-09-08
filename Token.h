@@ -21,7 +21,7 @@ protected:
     void* m_value;
     string m_origin;
 public:
-    Token(TokenType type, const string &origin="\0");
+    explicit Token(TokenType type, const string &origin="\0");
     Token & operator=(const Token & token);
     Token(TokenType type, double d, const string &origin);
     Token(TokenType type, char c, const string &origin);
