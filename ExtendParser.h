@@ -22,12 +22,13 @@ class ExtendParser {
 private:
     TokenStream m_stream;
     Token m_token;
-    map<string, Matrix> m_matrix;
+
 public:
+    map<string, Matrix> m_matrix;
     ExtendParser();
     void advance();
     Token & getToken();
-    Matrix processS();
+    string processS();
     Matrix processE();
     Matrix processT();
     Matrix processU();

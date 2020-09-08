@@ -25,7 +25,8 @@ Token &ExtendParser::getToken(){
     return m_token;
 }
 
-Matrix ExtendParser::processS() {
+string ExtendParser::processS() {
+    string output;
     this->advance();
     Matrix result(0,0);
     string variable = m_token.asString();
@@ -39,13 +40,13 @@ Matrix ExtendParser::processS() {
     if (m_token.isEquls(';')) {
         this->advance();
     } else {
-        cout << variable << " = ";
-        if (result.size() > 1) cout << "\n";
-        cout << result.toString() << endl;
+        output.append(variable).append(" = ");
+        if (result.size() > 1) output.append("\n");
+        output.append(result.toString());
     }
     if (m_token.getType() != END)
         throw ParseException("Expected END token, but found " + m_token.toString());
-    return result;
+    return output;
 }
 
 Matrix ExtendParser::processE() {

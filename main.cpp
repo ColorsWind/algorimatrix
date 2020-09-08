@@ -5,12 +5,24 @@
 #include "TokenStream.h"
 #include "ExtendParser.h"
 #include "ParseException.h"
+#include "AlgorimatrixQt.h"
 
 using std::cout;
 using std::cin;
 using std::endl;
 using std::cerr;
-int main() {
+int console();
+int main(int argc, char* argv[]) {
+    if (argc == 1 && argv[0] == "nogui") {
+        return console();
+    }
+    QApplication a(argc, argv);
+    AlgorimatrixQt w;
+    w.show();
+    return a.exec();
+}
+
+int console() {
     char ch[100];
     ExtendParser parser;
     while(true) {
@@ -21,14 +33,12 @@ int main() {
             continue;
         }
         try {
-            parser.processS();
+            cout << parser.processS() << endl;
         } catch (MatrixException &exception) {
             cerr << "ERROR: matrix error:\n\t" << exception.msg() << endl;
         } catch (ParseException &exception) {
             cerr << "ERROR: parse error:\n\t" << exception.msg() << endl;
         }
     }
-
-
 }
 
