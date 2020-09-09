@@ -20,6 +20,14 @@ bool ParseResult::isRemove() const {
     return m_size.empty();
 }
 
-ParseResult::ParseResult(const string &variable, const string &message, const string &size) : m_variable(variable),
+const string &ParseResult::getCommand() const {
+    return m_command;
+}
+
+ParseResult::ParseResult(const string &command, const string &variable, const string &message, const string &size) :
+                                                                                              m_command(command),
+                                                                                              m_variable(variable),
                                                                                               m_message(message),
                                                                                               m_size(size) {}
+
+ParseResult::ParseResult() {}

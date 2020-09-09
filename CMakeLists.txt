@@ -8,6 +8,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Concurrent REQUIRED)
 
 add_executable(algorimatrix
         main.cpp
@@ -28,6 +29,6 @@ add_executable(algorimatrix
         AlgorimatrixQt.h
         AlgorimatrixQt.cpp
         AlgorimatrixQt.ui
-        ParseResult.cpp ParseResult.h)
+        ParseResult.cpp ParseResult.h WorkThreadQt.cpp WorkThreadQt.h)
 
-target_link_libraries(algorimatrix Qt5::Widgets)
+target_link_libraries(algorimatrix Qt5::Widgets Qt5::Concurrent)

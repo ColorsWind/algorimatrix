@@ -22,6 +22,7 @@ const static string ANS = "ans";
 // L  -> E{,E}
 class ExtendParser {
 protected:
+    string m_input;
     TokenStream m_stream;
     Token m_token;
     map<string, Matrix> m_matrix;
@@ -36,7 +37,7 @@ public:
     Matrix processF();
     vector<struct Matrix> processL();
     Matrix processM();
-    void input(string basicString);
+    void input(string str);
 
     void printVariable();
 };

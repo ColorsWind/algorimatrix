@@ -2,6 +2,7 @@
 // Created by colors_wind on 2020/8/21.
 //
 #include <iostream>
+#include <QMetaType>
 #include "TokenStream.h"
 #include "ExtendParser.h"
 #include "ParseException.h"
@@ -17,6 +18,7 @@ int main(int argc, char* argv[]) {
         return console();
     }
     QApplication a(argc, argv);
+    qRegisterMetaType<ParseResult>("ParseResult") ;
     AlgorimatrixQt w;
     w.show();
     return QApplication::exec();

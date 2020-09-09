@@ -58,7 +58,7 @@ ParseResult ExtendParser::processS() {
     }
     if (m_token.getType() != END)
         throw ParseException("Expected END token, but found " + m_token.toString());
-    return ParseResult(variable, message, size);
+    return ParseResult(m_input, variable, message, size);
 }
 
 Matrix ExtendParser::processE() {
@@ -188,6 +188,7 @@ Matrix ExtendParser::processM() {
 ExtendParser::ExtendParser() : m_stream(TokenStream()), m_token(Token(END)) {}
 
 void ExtendParser::input(string str) {
+    m_input = str;
     m_token = Token(END);
     if (str.find('=') == string::npos)
         str.insert(0, ANS + " = ");

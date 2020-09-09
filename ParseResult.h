@@ -9,11 +9,14 @@
 using std::string;
 class ParseResult {
 private:
+    string m_command;
     string m_variable;
     string m_message;
     string m_size;
 public:
-    ParseResult(const string &variable, const string &message, const string &size);
+    ParseResult();
+    ParseResult(const string &command, const string &variable, const string &message, const string &size);
+    const string &getCommand() const;
     const string &getVariable() const;
     const string &getMessage() const;
     const string &getSize() const;

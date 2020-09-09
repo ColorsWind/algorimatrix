@@ -56,7 +56,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QStatusBar" name="m_statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
