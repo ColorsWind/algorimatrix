@@ -1,7 +1,5 @@
 
 #include "AlgorimatrixQt.h"
-#include "ParseException.h"
-#include "WorkThreadQt.h"
 #include <QStandardItemModel>
 #include <QCompleter>
 #include <iostream>
@@ -24,7 +22,7 @@ AlgorimatrixQt::AlgorimatrixQt(QWidget *parent)
     com->setCaseSensitivity(Qt::CaseInsensitive);
     m_ui.m_in ->setCompleter(com);
     m_workThread = new WorkThreadQt();
-    m_workThread -> moveToThread(new QThread(this);
+    m_workThread -> moveToThread(new QThread(this));
     m_workThread->start();
     connect(m_workThread, SIGNAL(plainText(QString)), this, SLOT(appendPlainText(QString)), Qt::QueuedConnection);
     connect(m_workThread, SIGNAL(htmlText(QString)), this, SLOT(appendHtmlText(QString)), Qt::QueuedConnection);
@@ -44,7 +42,7 @@ void AlgorimatrixQt::appendHtmlText(QString qstr) {
 void AlgorimatrixQt::onInput() {
     QString qstr = m_ui.m_in -> text();
     m_ui.m_out -> appendPlainText(">> " + qstr);
-    m_workThread-> input(qstr);
+    m_workThread -> input(qstr);
     m_ui.m_in -> clear();
 }
 

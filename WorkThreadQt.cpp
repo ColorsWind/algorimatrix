@@ -6,7 +6,7 @@
 #include "WorkThreadQt.h"
 #include "ParseException.h"
 
-WorkThreadQt::WorkThreadQt(QObject* parent) : QThread(parent) {}
+
 
 void WorkThreadQt::run() {
     while (true) {
@@ -15,7 +15,6 @@ void WorkThreadQt::run() {
         m_parser.input(qstr.toStdString());
         try {
             ParseResult result = m_parser.processS();
-
             emit plainText(QString::fromStdString(result.getMessage()));
             emit done(result);
         } catch (MatrixException &exception) {
@@ -29,9 +28,11 @@ void WorkThreadQt::run() {
 
 void WorkThreadQt::input(QString &qstr) {
     m_queue.enqueue(qstr);
-    emit statusbar(m_queue.size());
+    statusbar(m_queue.size());
     m_semaphore.release();
 }
+
+WorkThreadQt::WorkThreadQt() = default;
 
 WorkThreadQt::~WorkThreadQt() = default;
 

@@ -21,7 +21,7 @@ private:
     QQueue<QString> m_queue;
     ExtendParser m_parser;
 public:
-    WorkThreadQt(QObject *parent = nullptr);
+    WorkThreadQt();
     ~WorkThreadQt();
     void run() override;
     void input(QString &qstr);
