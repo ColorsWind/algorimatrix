@@ -44,7 +44,7 @@ Token TokenStream::next() {
     }
     throw ParseException("Unknown character '" + to_string(c) + "'(" + to_string((int)c) + ")");
 }
-bool TokenStream::hasNext() {
+bool TokenStream::hasNext() const {
     return !m_end;
 }
 

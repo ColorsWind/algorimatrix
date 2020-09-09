@@ -2,7 +2,7 @@
 // Created by colors_wind on 2020/9/2.
 //
 #include "MatrixFunc.h"
-
+#include <QtCore/QThread>
 
 bool isZero(double d) {
     return abs(d) < EPS;
@@ -180,6 +180,7 @@ Matrix trans(const vector<Matrix> &matrix) {
 }
 
 
+
 map<string, Func> map_func = {
         {"sin", sin},{"cos", cos}, {"tan", tan}, {"cot", cot},
         {"csc", csc}, {"sec", sec},
@@ -190,8 +191,14 @@ map<string, Func> map_func = {
         {"sub", sub}, {"zeros", zeros}, {"ident", ident},
         {"adjoint", adjoint}, {"cofactor", cofactor},
         {"size", size}, {"row", row}, {"col", col}, {"rank", rank},
-        {"reshape", reshape}, {"trans", trans}
+        {"reshape", reshape}, {"trans", trans},
+        {"sleep", sleep}
 };
+
+Matrix sleep(const vector<Matrix> &matrix) {
+    QThread::msleep(matrix[0][0]);
+    return Matrix(0,0);
+}
 
 
 

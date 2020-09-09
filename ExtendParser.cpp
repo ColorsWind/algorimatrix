@@ -12,6 +12,8 @@ using std::cout;
 using std::endl;
 using std::vector;
 using std::copy;
+using std::setw;
+
 void ExtendParser::advance() {
     if (m_stream.hasNext()) {
         m_token = m_stream.next();
@@ -25,27 +27,38 @@ Token &ExtendParser::getToken(){
     return m_token;
 }
 
-Matrix ExtendParser::processS() {
+ParseResult ExtendParser::processS() {
+    Matrix matrix(0, 0);
+    string message;
+    string size;
     this->advance();
-    Matrix result(0,0);
     string variable = m_token.asString();
     this->advance();
+    // matrix
     if (m_token.isEquls('=')) {
         this->advance();
-        result = m_matrix[variable] = processE();
+        matrix = processE();
     } else {
-        result = m_matrix[variable];
+        throw ParseException("Expected '=', but found " + m_token.toString());
     }
+    // message
     if (m_token.isEquls(';')) {
         this->advance();
     } else {
-        cout << variable << " = ";
-        if (result.size() > 1) cout << "\n";
-        cout << result.toString() << endl;
+        message.append(variable).append(" = ");
+        if (matrix.size() > 1) message.append("\n");
+        message.append(matrix.toString());
+    }
+    // variable & size
+    if (variable == ANS || matrix.size() > 0) {
+        m_matrix[variable] = matrix;
+        size = matrix.sizeString();
+    } else {
+        m_matrix.erase(variable);
     }
     if (m_token.getType() != END)
         throw ParseException("Expected END token, but found " + m_token.toString());
-    return result;
+    return ParseResult(m_input, variable, message, size);
 }
 
 Matrix ExtendParser::processE() {
@@ -144,12 +157,12 @@ Matrix ExtendParser::processF() {
 
     } else {
         throw ParseException("Unexpect token " + m_token.toString());
-        throw;
     }
     return result;
 }
 
 vector<Matrix> ExtendParser::processL() {
+    if (m_token.isEquls(')')) return vector<Matrix>();
     vector<Matrix> arr;
     arr.push_back(processE());
     while(m_token.isEquls(',')) {
@@ -160,6 +173,7 @@ vector<Matrix> ExtendParser::processL() {
 }
 
 Matrix ExtendParser::processM() {
+    if (m_token.isEquls(']')) return Matrix(0,0);
     vector<vector<Matrix>> arr;
     arr.push_back(processL());
     while(m_token.isEquls(';')) {
@@ -174,26 +188,26 @@ Matrix ExtendParser::processM() {
 ExtendParser::ExtendParser() : m_stream(TokenStream()), m_token(Token(END)) {}
 
 void ExtendParser::input(string str) {
+    m_input = str;
     m_token = Token(END);
     if (str.find('=') == string::npos)
-        str.insert(0, "ans = ");
+        str.insert(0, ANS + " = ");
     m_stream.input(str);
 }
 
-using std::setw;
 void ExtendParser::printVariable() {
     int width = 10;
-    for(auto iter = m_matrix.begin(); iter != m_matrix.end(); iter++) {
-        if (iter -> first.size() > width)
-            width = iter -> first.size();
+    for(auto & matrix : m_matrix) {
+        if (matrix.first.size() > width)
+            width = matrix.first.size();
     }
     for(int k=0;k<width+10;k++) cout << "-";
     cout << endl;
     cout << "|" << setw(width) << "Name" << "|" << setw(7) << "Size" << "|" << endl;
     for(int k=0;k<width+10;k++) cout << "-";
     cout << endl;
-    for(auto iter = m_matrix.begin(); iter != m_matrix.end(); iter++) {
-        cout << "|" << setw(width) << iter -> first << "|"  << setw(7) << iter->second.sizeString() << "|" << endl;
+    for(auto & matrix : m_matrix) {
+        cout << "|" << setw(width) << matrix.first << "|"  << setw(7) << matrix.second.sizeString() << "|" << endl;
     }
     for(int k=0;k<width+10;k++) cout << "-";
     cout << endl;

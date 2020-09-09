@@ -44,13 +44,13 @@ Token::~Token() {
                 delete (string*)m_value;
                 break;
         }
-        m_value = NULL;
+        m_value = nullptr;
     }
 }
 
 Token &Token::operator=(const Token &token) {
-    this ->m_type = token.m_type;
-    this ->m_value = token.copyValue();
+    this -> m_type = token.m_type;
+    this -> m_value = token.copyValue();
     return *this;
 }
 
@@ -105,7 +105,7 @@ void *Token::copyValue() const {
             return m_value;
         case END:
         default:
-            return NULL;
+            return nullptr;
     }
 }
 

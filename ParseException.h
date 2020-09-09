@@ -13,9 +13,9 @@ class ParseException : public exception {
 private:
     string m_msg;
 public:
-    ParseException(string msg);
+    explicit ParseException(const string & msg);
     string & msg();
-    const char * what () const throw () {
+    const char * what () const noexcept {
         return "Expression parsing exception";
     }
 };
