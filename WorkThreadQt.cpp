@@ -7,7 +7,6 @@
 #include "ParseException.h"
 
 
-
 void WorkThreadQt::run() {
     while (true) {
         m_semaphore.acquire();

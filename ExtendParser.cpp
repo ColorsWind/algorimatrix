@@ -4,6 +4,7 @@
 
 #include "ExtendParser.h"
 #include "ParseException.h"
+#include "MatrixFunc.h"
 #include <iostream>
 #include <vector>
 #include <iomanip>
@@ -48,6 +49,7 @@ ParseResult ExtendParser::processS() {
         message.append(variable).append(" = ");
         if (matrix.size() > 1) message.append("\n");
         message.append(matrix.toString());
+        message.append("\n");
     }
     // variable & size
     if (variable == ANS || matrix.size() > 0) {
@@ -185,7 +187,10 @@ Matrix ExtendParser::processM() {
 }
 
 
-ExtendParser::ExtendParser() : m_stream(TokenStream()), m_token(Token(END)) {}
+ExtendParser::ExtendParser() : m_stream(TokenStream()), m_token(Token(END)) {
+    m_matrix["E"] = Matrix(E);
+    m_matrix["PI"] = Matrix(PI);
+}
 
 void ExtendParser::input(string str) {
     m_input = str;
