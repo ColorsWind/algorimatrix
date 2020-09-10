@@ -22,7 +22,7 @@ private:
     ExtendParser m_parser;
 public:
     WorkThreadQt();
-    ~WorkThreadQt();
+    ~WorkThreadQt() override;
     void run() override;
     void input(QString &qstr);
 signals:
