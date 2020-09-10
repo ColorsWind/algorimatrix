@@ -182,17 +182,17 @@ Matrix trans(const vector<Matrix> &matrix) {
 
 
 map<string, Func> map_func = {
-        {"sin", sin},{"cos", cos}, {"tan", tan}, {"cot", cot},
-        {"csc", csc}, {"sec", sec},
-        {"arcsin", arcsin}, {"arccos", arccos}, {"arctan", arctan},
-        {"ln", ln}, {"log", log}, {"exp", exp}, {"pow", pow},
-        {"triu", triu}, {"det", det}, {"inv", inverse},
-        {"swap", swap}, {"add", add}, {"multiply", multiply},
-        {"sub", sub}, {"zeros", zeros}, {"ident", ident},
-        {"adjoint", adjoint}, {"cofactor", cofactor},
-        {"size", size}, {"row", row}, {"col", col}, {"rank", rank},
-        {"reshape", reshape}, {"trans", trans},
-        {"sleep", sleep}
+            {"sin", sin},{"cos", cos}, {"tan", tan}, {"cot", cot},
+            {"csc", csc}, {"sec", sec},
+            {"arcsin", arcsin}, {"arccos", arccos}, {"arctan", arctan},
+            {"ln", ln}, {"log", log}, {"exp", exp}, {"pow", pow},
+            {"triu", triu}, {"det", det}, {"inv", inverse},
+            {"swap", swap}, {"add", add}, {"multiply", multiply},
+            {"sub", sub}, {"zeros", zeros}, {"ident", ident},
+            {"adjoint", adjoint}, {"cofactor", cofactor},
+            {"size", size}, {"row", row}, {"col", col}, {"rank", rank},
+            {"reshape", reshape}, {"trans", trans},
+            {"sleep", sleep}
 };
 
 Matrix sleep(const vector<Matrix> &matrix) {
