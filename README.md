@@ -1,6 +1,6 @@
 # AlgoriMatrix
 
-纯CPP实现基本矩阵计算。
+矩阵计算器，支持矩阵计算和一些`element-wise`运算。
 
 https://github.com/ColorsWind/algorimatrix/
 
@@ -18,7 +18,7 @@ algorimatrix nogui
 
 ### 界面介绍
 
-![main-window.png](https://cdn.colors-wind.net/usr/uploads/2020/09/4100636080.png)
+![main-window.png](https://www.colors-wind.net/usr/uploads/2020/09/4100636080.png)
 
 特别地，命令行模式可以使用`vars`查看变量表。·
 
